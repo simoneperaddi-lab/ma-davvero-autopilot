@@ -9,8 +9,8 @@ Un processo GitHub Actions prepara ogni giorno un Reel originale in italiano da 
 1. Consulta la tabella scientifica `ps` di NASA, cercando esopianeti confermati con un anno inferiore a un giorno terrestre.
 2. Esclude record controversi, limiti superiori/inferiori, misure senza incertezze o riferimento bibliografico e soggetti già utilizzati. Richiede errori relativi inferiori al 10% e l'intero intervallo selezionato sotto un giorno.
 3. Recupera nuovamente il record per nome e confronta i valori. Salva riga originale, URL della query riproducibile, riferimento fornito dal catalogo, data e SHA-256. Nessun DOI inventato, nessun fallback a una risposta LLM.
-4. Deriva matematicamente le ore da giorni × 24; produce cinque scene, didascalia e fonti. Testi e grafiche originali; nessuna riproduzione di articoli, fotografie o loghi NASA.
-5. Renderizza con Pillow/FFmpeg: MP4 verticale 1080×1920, H.264, 24 fps, 20 secondi, zoom e dissolvenze, testi impressi, SRT separato, musica sintetizzata localmente AAC 48 kHz. L'audio si può togliere con `--no-audio`. Non c'è una voce narrante. Il video per Instagram non dipende da tracce sottotitoli che la piattaforma potrebbe eliminare.
+4. Deriva matematicamente le ore da giorni × 24; produce la didascalia e le fonti; il renderer costruisce otto inquadrature animate dalla stessa misura. Testi e grafiche originali; nessuna riproduzione di articoli, fotografie o loghi NASA.
+5. Renderizza con Pillow/FFmpeg: MP4 verticale 1080×1920, H.264, 24 fps, 20 secondi, stella e pianeta con orbita animata, scia, cambi di camera, confronto visivo con 24 ore, testi brevi impressi, SRT separato e musica originale locale a 120 BPM (AAC 48 kHz). L'audio si può togliere con `--no-audio`. Non c'è una voce narrante. Il video per Instagram non dipende da tracce sottotitoli che la piattaforma potrebbe eliminare.
 6. Registra l'intenzione **prima** di `media_publish`; carica il file direttamente su `rupload.facebook.com`, attende l'elaborazione e pubblica al massimo una volta per giorno italiano. Nessun sito pubblico per ospitare MP4.
 7. Rinnova il token ogni sette giorni nel secret store GitHub. Conserva il registro nel branch `autopilot-state`; produce un riepilogo settimanale in Actions, domenica alle 18:43 UTC.
 
@@ -36,6 +36,8 @@ Per controllare NASA e generare un Reel reale **senza pubblicare né usare crede
 ```
 
 `preflight` aggiunge la verifica dell'identità Instagram, ma non crea container, non carica e non pubblica. `publish` richiede sia l'opzione esplicita sia `MAD_PUBLISH_ENABLED=true`, ref `refs/heads/main`, segreti e ID dell'account. Non legge credenziali da `.env`. Il workflow espone i segreti soltanto ai passaggi che ne hanno bisogno; non esegue il publisher su pull request.
+
+Il nuovo renderer produce anche `contact-sheet.jpg` e otto frame estratti dal MP4, per verificare il risultato effettivamente codificato. [Storyboard e verifica visiva](docs/visual-reel.md).
 
 ## Affidabilità, sicurezza e manutenzione
 
@@ -63,7 +65,7 @@ Il rendering richiede decine di secondi più installazione/coda; stimare 2–5 m
 | `autopilot/pipeline.py` | Stato durevole, deduplicazione, rinnovo e riepiloghi |
 | `autopilot/instagram.py` | API ufficiale, upload diretto, polling e pubblicazione |
 | `autopilot/state.py` | Registro GitHub e aggiornamento cifrato dei Secrets |
-| `autopilot/render.py` | Riutilizzo del renderer originale del content studio |
+| `autopilot/render.py`, `orbital.py`, `soundtrack.py` | Motion graphics orbitali e colonna sonora originale; studio precedente invariato |
 | `.github/workflows/autopilot.yml` | Cron e comandi manuali con opt-in esplicito |
 | `tests/test_autopilot.py` | Contratti HTTP simulati, fault injection e E2E con FFmpeg reale |
 | `.github/workflows/tests.yml` | Regressioni offline e verifica pubblica separata NASA |
