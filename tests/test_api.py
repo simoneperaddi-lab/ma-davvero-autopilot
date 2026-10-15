@@ -31,7 +31,7 @@ def test_generate_persist_and_reopen(client, settings):
         assert len(content["slides"]) == 5
         assert content["sources"][0]["url"].startswith("https://")
         assert client.get(f'/api/contents/{content["id"]}').json() == content
-    with TestClient(create_app(settings)) as reopened:
+    with TestClient(create_app(settings), client=("127.0.0.1", 50000)) as reopened:
         assert len(reopened.get("/api/contents").json()) == 3
 
 
@@ -60,3 +60,22 @@ def test_unknown_and_malformed_ids(client):
 
 def test_no_instagram_publish_route(client):
     assert client.post("/api/publish", json={}).status_code == 404
+
+
+def test_original_mvp_payload_can_be_reopened_and_edited(settings):
+    import json
+    from app.demo import example
+    from app.models import Category, Content
+    from app.storage import SQLiteStore
+    content = Content(**example(Category.space).model_dump(), provider="demo")
+    payload = content.model_dump(mode="json", exclude={"revision", "claims", "research_sources", "audit"})
+    store = SQLiteStore(settings.mad_data_dir)
+    with store.connect() as db:
+        db.execute("INSERT INTO contents VALUES (?, ?, ?)", (str(content.id), content.created_at.isoformat(), json.dumps(payload)))
+    first, second = store.get(content.id), store.get(content.id)
+    assert first.revision == 0
+    assert first.claims == second.claims
+    assert len(first.claims) == len(first.slides) + 3
+    updated = store.mutate(content.id, 0, lambda c: c)
+    assert updated.revision == 1
+    assert store.get(content.id).claims == first.claims

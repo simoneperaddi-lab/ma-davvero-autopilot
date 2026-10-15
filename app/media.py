@@ -9,6 +9,7 @@ from uuid import UUID, uuid4
 from PIL import Image, ImageDraw, ImageFont
 
 from app.models import Artifact, Content
+from app.video import render_video
 
 
 class MediaError(Exception):
@@ -76,7 +77,9 @@ def render_slide(content: Content, index: int, height: int, target: Path):
 
 def caption(content: Content):
     sources = "\n".join(f"- {s.title}: {s.url}" for s in content.sources)
-    return f"BOZZA — DA VERIFICARE PRIMA DI QUALSIASI PUBBLICAZIONE\n\n{content.caption}\n\nFonti suggerite (non verificate automaticamente):\n{sources}\n\nControlli editoriali:\n{content.verification_notes}\n"
+    evidence = "\n".join(f"- {c.label}: {c.outcome} | revisore: {c.reviewer or 'nessuno'} | {c.note}" for c in content.claims)
+    research = "\n".join(f"- {s.title}: {s.url} | raggiungibile={s.reachable} | {s.check_note}" for s in content.research_sources)
+    return f"BOZZA — DA VERIFICARE PRIMA DI QUALSIASI PUBBLICAZIONE\nStato editoriale: {content.status} | revisione {content.revision}\n\n{content.caption}\n\nFonti suggerite (non verificate automaticamente):\n{sources}\n\nRicerca e recupero:\n{research}\n\nVerifiche umane:\n{evidence}\n\nControlli editoriali:\n{content.verification_notes}\n"
 
 
 class MediaService:
@@ -85,7 +88,7 @@ class MediaService:
         self.root.mkdir(parents=True, exist_ok=True)
         self.lock = threading.Lock()
 
-    def export(self, content: Content, kind: str) -> Artifact:
+    def export(self, content: Content, kind: str, *, style="static", audio="none") -> Artifact:
         if not self.lock.acquire(blocking=False):
             raise MediaError("Un'esportazione è già in corso. Riprova tra poco.")
         target = self.root / str(uuid4())
@@ -106,16 +109,13 @@ class MediaService:
             else:
                 filename = "reel.mp4"
                 try:
-                    subprocess.run([
-                        "ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-framerate", "1/4",
-                        "-i", str(target / "frame-%02d.png"), "-c:v", "libx264", "-threads", "2",
-                        "-preset", "fast", "-r", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
-                        str(target / filename),
-                    ], check=True, capture_output=True, timeout=180)
+                    style, note = render_video(target, content, style, audio)
                 except (subprocess.SubprocessError, OSError) as exc:
                     raise MediaError("Esportazione FFmpeg non riuscita. Controllare installazione e risorse disponibili.") from exc
             artifact = Artifact(id=UUID(target.name), content_id=content.id, kind=kind, filename=filename,
-                                download_url=f"/api/artifacts/{target.name}")
+                                download_url=f"/api/artifacts/{target.name}", style=style if kind == "reel" else "static",
+                                audio=audio if kind == "reel" else "none", render_note=note if kind == "reel" else "",
+                                content_revision=content.revision)
             (target / "artifact.json").write_text(artifact.model_dump_json(), encoding="utf-8")
             # Intermediate frames are not needed after the final export.
             for frame in target.glob("*.png"):

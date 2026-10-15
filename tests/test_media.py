@@ -47,7 +47,8 @@ def test_real_vertical_reel(client, tmp_path):
     assert (stream["width"], stream["height"]) == (1080, 1920)
     assert stream["codec_name"] == "h264"
     assert stream["pix_fmt"] == "yuv420p"
-    assert len(metadata["streams"]) == 1  # Deliberately silent MVP.
+    assert not any(s["codec_type"] == "audio" for s in metadata["streams"])
+    assert any(s["codec_name"] == "mov_text" for s in metadata["streams"])
     assert float(metadata["format"]["duration"]) == pytest.approx(20, abs=0.1)
 
 

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import sqlite3
 from pathlib import Path
 from uuid import UUID
 
@@ -8,9 +7,14 @@ import httpx
 
 from app.config import Settings
 from app.models import Content
+from app.controls import connection
 
 
 class StorageError(Exception):
+    pass
+
+
+class ConflictError(Exception):
     pass
 
 
@@ -22,7 +26,7 @@ class SQLiteStore:
             db.execute("CREATE TABLE IF NOT EXISTS contents (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, payload TEXT NOT NULL)")
 
     def connect(self):
-        return sqlite3.connect(self.path, timeout=15)
+        return connection(self.path)
 
     def list(self) -> list[Content]:
         with self.connect() as db:
@@ -40,6 +44,20 @@ class SQLiteStore:
                 (str(c.id), c.created_at.isoformat(), c.model_dump_json()) for c in contents
             ])
 
+    def mutate(self, content_id, revision, transform):
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT payload FROM contents WHERE id=?", (str(content_id),)).fetchone()
+            if not row:
+                raise ConflictError("Contenuto non disponibile.")
+            content = Content.model_validate_json(row[0])
+            if content.revision != revision:
+                raise ConflictError("Contenuto aggiornato da un'altra richiesta: ricaricare la scheda.")
+            updated = transform(content)
+            updated.revision += 1
+            db.execute("UPDATE contents SET payload=? WHERE id=?", (updated.model_dump_json(), str(content_id)))
+            return updated
+
 
 class SupabaseStore:
     def __init__(self, settings: Settings):
@@ -48,10 +66,10 @@ class SupabaseStore:
         self.url = settings.supabase_url.rstrip("/") + "/rest/v1/contents"
         self.key = settings.supabase_service_role_key.get_secret_value()
 
-    def request(self, method: str, **kwargs):
+    def request(self, method: str, *, representation=False, **kwargs):
         try:
             response = httpx.request(method, self.url, headers={
-                "apikey": self.key, "Authorization": f"Bearer {self.key}", "Prefer": "return=minimal",
+                "apikey": self.key, "Authorization": f"Bearer {self.key}", "Prefer": "return=representation" if representation else "return=minimal",
             }, timeout=15, **kwargs)
             response.raise_for_status()
             return response
@@ -75,6 +93,22 @@ class SupabaseStore:
 
     def save(self, contents: list[Content]):
         self.request("POST", json=[{"id": str(c.id), "created_at": c.created_at.isoformat(), "payload": c.model_dump(mode="json")} for c in contents])
+
+    def mutate(self, content_id, revision, transform):
+        content = self.get(content_id)
+        if content is None or content.revision != revision:
+            raise ConflictError("Contenuto aggiornato o non disponibile: ricaricare la scheda.")
+        updated = transform(content)
+        updated.revision += 1
+        params = {"id": f"eq.{content_id}"}
+        if revision == 0:
+            params["or"] = "(payload->>revision.is.null,payload->>revision.eq.0)"
+        else:
+            params["payload->>revision"] = f"eq.{revision}"
+        rows = self.request("PATCH", representation=True, params=params, json={"payload": updated.model_dump(mode="json")}).json()
+        if not rows:
+            raise ConflictError("Modifica concorrente: ricaricare la scheda.")
+        return Content.model_validate(rows[0]["payload"])
 
 
 def create_store(settings: Settings):
