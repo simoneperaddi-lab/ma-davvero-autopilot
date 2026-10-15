@@ -318,3 +318,39 @@ def test_complete_offline_e2e_real_video_and_duplicate_guard(tmp_path):
     assert (tmp_path / 'subtitles.srt').stat().st_size > 0
     assert (tmp_path / 'audio-license.txt').exists()
     assert 'Pubblicati: 1' in (tmp_path / 'report.md').read_text()
+
+
+def test_nasa_unquoted_reference_html_is_supported():
+    row = dict(ROW, pl_refname='<a refstr=REAL_FORMAT href=https://ui.adsabs.harvard.edu/abs/SIMULATION-NOT-A-PUBLICATION/abstract target=ref>Test fixture</a>')
+    assert validate(row)[1] == 'https://ui.adsabs.harvard.edu/abs/SIMULATION-NOT-A-PUBLICATION/abstract'
+
+
+def test_large_github_ledger_raw_read_and_concurrency_check():
+    calls = []
+    def handler(request):
+        calls.append(request)
+        if request.headers['accept'] == 'application/vnd.github.raw+json':
+            return httpx.Response(200, json=empty_state())
+        return httpx.Response(200, json={'sha': 'snapshot', 'encoding': 'none', 'content': ''})
+    assert GitHubState(http(handler), 'owner/repo', 'test').load() == empty_state()
+    assert len(calls) == 3
+
+
+def test_failure_to_record_success_reconciles_next_run(tmp_path):
+    class FailOnce(LocalState):
+        fail = True
+        def save(self, value):
+            if self.fail and any(x['status'] == 'published' for x in value['entries']):
+                self.fail = False
+                raise RemoteError(500)
+            super().save(value)
+    class Stateful(SimulatedInstagram):
+        def wait_ready(self, container):
+            return 'PUBLISHED' if self.publishes else 'FINISHED'
+    store = FailOnce(tmp_path / 'ledger.json')
+    ig = Stateful()
+    with pytest.raises(RemoteError):
+        pipeline(tmp_path, ig, store=store).run(tmp_path)
+    assert pipeline(tmp_path, ig, store=store).run(tmp_path) == 'published'
+    assert ig.publishes == 1
+    assert store.load()['entries'][0]['status'] == 'published'

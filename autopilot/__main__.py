@@ -6,11 +6,11 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from autopilot.http import HTTP
+from autopilot.http import HTTP, RemoteError
 from autopilot.instagram import Instagram
 from autopilot.pipeline import Pipeline, event, weekly_report
 from autopilot.render import render
-from autopilot.science import Archive
+from autopilot.science import Archive, Unverified
 from autopilot.simulation import SimulatedArchive, SimulatedInstagram
 from autopilot.state import GitHubState, LocalState, SecretStore
 
@@ -84,6 +84,10 @@ def main(argv=None):
     except Exception as exc:
         # HTTP exceptions may contain access tokens in request URLs. Never print str(exc).
         message = f"Operazione interrotta ({type(exc).__name__}). Consultare docs/ANDROID.md e il registro; nessun retry di pubblicazione."
+        if isinstance(exc, RemoteError):
+            message += f" HTTP: {exc.status or 'connessione'}."
+        if isinstance(exc, Unverified):
+            message += " " + str(exc)  # Only locally defined rejection reasons, never response bodies.
         if store is not None:
             try:
                 state = store.load()

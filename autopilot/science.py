@@ -7,8 +7,10 @@ import hashlib
 import json
 import math
 import re
+from collections import Counter
+from html.parser import HTMLParser
 from datetime import datetime, timezone
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse, quote
 
 from app.models import Category, Content, Slide, Source
 
@@ -45,11 +47,31 @@ def validate(row):
     if period + upper >= 1:
         raise Unverified("Intervallo del periodo attraversa un giorno")
     # Real publication link supplied by NASA, never generated from a guessed DOI.
-    reference = row.get("pl_refname", "")
-    match = re.search(r'href=[\"\'](https://(?:ui\.adsabs\.harvard\.edu|doi\.org|arxiv\.org)/[^\"\'<>\s]+)', reference)
-    if not match:
+    reference = row.get("pl_refname")
+    if not isinstance(reference, str):
         raise Unverified("Riferimento bibliografico NASA mancante")
-    return period, match.group(1)
+    parser = ReferenceParser()
+    parser.feed(reference)
+    if not parser.urls:
+        raise Unverified("Riferimento bibliografico NASA mancante")
+    return period, parser.urls[0]
+
+
+class ReferenceParser(HTMLParser):
+    # NASA uses valid HTML with both quoted AND unquoted href attributes.
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.urls = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag != "a":
+            return
+        href = dict(attrs).get("href") or ""
+        parsed = urlparse(href)
+        if (parsed.scheme == "https" and parsed.netloc in {"ui.adsabs.harvard.edu", "doi.org", "arxiv.org"}
+                and parsed.path and not any(c.isspace() for c in href)):
+            self.urls.append(href)
+
 
 
 class Archive:
@@ -63,20 +85,24 @@ class Archive:
         return rows
 
     def select(self, used):
-        for row in self.rows(QUERY):
+        rows = self.rows(QUERY)
+        rejected = Counter()
+        for row in rows:
             if not isinstance(row, dict) or row.get("pl_name") in used:
                 continue
             try:
                 validate(row)
-            except Unverified:
+            except Unverified as exc:
+                rejected[str(exc)] += 1
                 continue
             # Separate retrieval by identifier guards against inconsistent snapshots.
             query = f"select {COLUMNS} from ps where default_flag=1 and pl_name='{row['pl_name']}'"
             verified = self.rows(query)
             if len(verified) != 1 or verified[0] != row:
+                rejected["Recuperi non coerenti"] += 1
                 continue
             return make_fact(row, query)
-        raise Unverified("Nessun nuovo esopianeta con misure e riferimenti sufficienti")
+        raise Unverified(f"Nessun nuovo esopianeta idoneo su {len(rows)} record. Esclusioni: {dict(rejected)}")
 
 
 def make_fact(row, query):
@@ -84,12 +110,13 @@ def make_fact(row, query):
     hours = f"{period * 24:.1f}".replace(".", ",")
     name = row["pl_name"]
     url = source_url(query)
+    overview = "https://exoplanetarchive.ipac.caltech.edu/overview/" + quote(name, safe="")
     body = (f"Secondo il NASA Exoplanet Archive, {name} completa un'orbita attorno "
             f"alla propria stella in circa {hours} ore terrestri.")
     caption = (f"Un anno in meno di un giorno? Su {name}, sì.\n\n{body}\n"
                "Qui ‘anno’ significa periodo orbitale: non la durata del giorno sul pianeta. "
                "Il valore è arrotondato; la misura ha un'incertezza.\n\n"
-               f"Fonte: NASA Exoplanet Archive (tabella ps)\n{url}\n"
+               f"Fonte: NASA Exoplanet Archive (tabella ps)\n{overview}\n"
                f"Pubblicazione indicata dal catalogo: {reference}\n\n"
                "#MaDavvero #Scienza #Astronomia #Esopianeti")
     content = Content(
