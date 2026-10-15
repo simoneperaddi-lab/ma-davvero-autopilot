@@ -51,7 +51,7 @@ def paragraph(draw, text, y, size, fill, width=904, gap=14):
     return y
 
 
-def render_slide(content: Content, index: int, height: int, target: Path):
+def render_slide(content: Content, index: int, height: int, target: Path, *, verified_catalogue=False, simulation=False):
     slide = content.slides[index]
     image = Image.new("RGB", (1080, height), "#10251e")
     draw = ImageDraw.Draw(image)
@@ -69,7 +69,7 @@ def render_slide(content: Content, index: int, height: int, target: Path):
     end = paragraph(draw, slide.title, top, title_size, "#cefc83")
     paragraph(draw, slide.text, end + 48, body_size, "#f6f3e9")
     draw.line((88, height - 280, 992, height - 280), fill="#57735d", width=2)
-    draw.text((88, height - 240), "BOZZA • DA VERIFICARE", font=font(28), fill="#cefc83")
+    draw.text((88, height - 240), "SIMULAZIONE • NON PUBBLICARE" if simulation else ("DATI: NASA EXOPLANET ARCHIVE" if verified_catalogue else "BOZZA • DA VERIFICARE"), font=font(28), fill="#cefc83")
     draw.text((88, height - 180), "Fonti e note nella caption allegata", font=font(25), fill="#acbfb1")
     draw.text((890, height - 130), f"{index + 1:02}/{len(content.slides):02}", font=font(25), fill="#f6f3e9")
     image.save(target, "PNG")

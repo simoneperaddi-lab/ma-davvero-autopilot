@@ -1,0 +1,80 @@
+name: MA DAVVERO autopilot
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'simulate = offline; preflight = checks only; publish = REAL publication (requires repository opt-in)'
+        required: true
+        default: simulate
+        type: choice
+        options: [simulate, verify, preflight, publish, report]
+  schedule:
+    - cron: '23 10 * * *'
+    - cron: '43 18 * * 0'
+permissions:
+  contents: read
+concurrency:
+  group: ma-davvero-autopilot
+  cancel-in-progress: false
+jobs:
+  run:
+    if: github.event_name == 'workflow_dispatch' || vars.MAD_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '43 18 * * 0' && 'report' || 'publish') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install free local renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r requirements.txt -c requirements.lock
+      - name: Offline simulation
+        if: env.MODE == 'simulate'
+        run: python -m autopilot --mode simulate
+      - name: Verify live NASA source without credentials
+        if: env.MODE == 'verify'
+        run: python -m autopilot --mode verify
+      - name: Account preflight (never publishes)
+        if: env.MODE == 'preflight'
+        env:
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
+          IG_API_VERSION: ${{ vars.IG_API_VERSION || 'v24.0' }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python -m autopilot --mode preflight
+      - name: Publish with explicit owner opt-in
+        if: env.MODE == 'publish'
+        env:
+          MAD_PUBLISH_ENABLED: ${{ vars.MAD_PUBLISH_ENABLED }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
+          IG_API_VERSION: ${{ vars.IG_API_VERSION || 'v24.0' }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_SECRET_UPDATER: ${{ secrets.GH_SECRET_UPDATER }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m autopilot --mode publish
+      - name: Weekly report
+        if: env.MODE == 'report'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m autopilot --mode report
+      - name: Keep reviewable output for one day
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: autopilot-${{ github.run_id }}
+          path: |
+            data/autopilot/reel.mp4
+            data/autopilot/caption.txt
+            data/autopilot/subtitles.srt
+            data/autopilot/audio-license.txt
+            data/autopilot/evidence.json
+            data/autopilot/render.json
+            data/autopilot/report.md
+          retention-days: 1

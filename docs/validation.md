@@ -1,4 +1,28 @@
-# Verifica della fase 2
+# Verifica dell’autopilota — issue #4
+
+Branch `feat/zero-cost-instagram-autopilot`, derivato dalla fase 2; PR unica verso `main`. Nessun merge, nessuna pubblicazione reale, nessun servizio a pagamento.
+
+## Risultati attuali
+
+- Baseline fase 2: **67 test passati**, zero saltati.
+- Suite integrata: **102 test passati**, zero saltati, circa 45 secondi. Rimane un warning di deprecazione Starlette/AnyIO esterno al progetto.
+- 35 nuovi test: dati scientifici insufficienti/controversi/incoerenti, derivazione numerica, fonti vere come contratto HTTP simulato, deduplicazione persistente, scrittura del ledger fallita, risposta publish persa, riconciliazione, blocco degli esiti ambigui, scadenza delle evidenze, rinnovo token e fallimento del secret store, cifratura GitHub verificata decifrando con una chiave di test, CAS GitHub, protezione dell’URL di upload, attivazione negata fuori main/senza opt-in.
+- E2E offline con FFmpeg reale: MP4 H.264 1080×1920, 24 fps, 20 secondi, AAC 48 kHz, testo impresso, SRT esterno e dichiarazione audio CC0. Due passaggi della pipeline producono una sola pubblicazione simulata. La fixture sintetica è marcata NON PUBBLICARE.
+- Tutti i test vietano rete/DNS: nessun segreto reale e nessuna chiamata pagata. Contratti Meta/GitHub simulati; questo non certifica permessi o compatibilità live del proprio account.
+- `pip check`, `compileall` e `git diff --check` superati.
+- Le richieste di sola lettura a NASA/Meta da questo ambiente cloud sono state bloccate dal proxy. È prevista una verifica separata in CI del catalogo NASA e del rendering, senza token Instagram; il risultato va letto nei check della PR.
+
+## Limiti che richiedono il proprietario
+
+Account professionale, app Meta, permessi e token long-lived non sono stati configurati. Il contratto live di upload/pubblicazione e il rinnovo di un token reale non sono stati eseguiti. La modalità `preflight` verifica identità e NASA, ma non esercita la pubblicazione. Il primo post reale richiede l’opt-in dell’owner descritto in ANDROID.md.
+
+Verifica scientifica limitata ai dati NASA selezionati; non una revisione indipendente del full text. Quote, disponibilità, ritardi cron e scadenze delle credenziali sono limiti reali. Nessun monitor esterno del cron. Una pubblicazione definitivamente ambigua richiede riconciliazione umana per non rischiare duplicati.
+
+---
+
+## Registro della verifica precedente dello studio
+
+# Verifica della fase 2 (storico)
 
 Riferimento: issue #2; branch `feat/phase2-editorial-studio` derivato da `feat/mvp-dashboard-content-studio` (`540a346`). Nessun merge e nessuna pubblicazione Instagram.
 

@@ -76,7 +76,7 @@ def encode(directory: Path, count: int, style: str, audio: str):
         base += ["-i", str(directory / "audio.wav")]
     base += ["-map", video_map, "-map", f"{subtitle_index}:0"]
     if audio == "original":
-        base += ["-map", f"{subtitle_index + 1}:a:0", "-c:a", "aac", "-b:a", "96k"]
+        base += ["-map", f"{subtitle_index + 1}:a:0", "-c:a", "aac", "-b:a", "96k", "-ar", "48000"]
     return base + [
         "-c:v", "libx264", "-threads", "2", "-preset", "fast", "-r", "24", "-pix_fmt", "yuv420p",
         "-c:s", "mov_text", "-metadata:s:s:0", "language=ita", "-disposition:s:0", "default",
