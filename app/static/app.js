@@ -25,7 +25,7 @@ function post(body) {
 }
 function renderList() {
   $('#total').textContent = contents.length;
-  $('#pending').textContent = contents.length;
+  $('#pending').textContent = contents.filter((c) => c.status !== 'approvato').length;
   $('#library-count').textContent = `${contents.length} contenuti`;
   const list = $('#content-list');
   list.replaceChildren();
@@ -36,7 +36,7 @@ function renderList() {
     card.setAttribute('aria-pressed', String(content.id === selectedId));
     const top = node('div', 'card-top');
     top.append(node('span', '', content.category), node('span', '', content.provider === 'demo' ? 'DEMO' : 'OPENAI'));
-    card.append(top, node('h3', '', content.title), node('p', '', content.hook), node('span', 'review-badge', '◌ Da verificare'));
+    card.append(top, node('h3', '', content.title), node('p', '', content.hook), node('span', 'review-badge', statusLabel(content.status)));
     card.addEventListener('click', () => { selectedId = content.id; renderList(); renderDetail(content); });
     list.append(card);
   }
@@ -44,7 +44,7 @@ function renderList() {
 function renderDetail(content) {
   const detail = $('#detail');
   detail.replaceChildren();
-  detail.append(node('p', 'eyebrow', `SCENEGGIATURA / ${content.category.toUpperCase()}`), node('h3', '', content.title), node('p', 'hook', content.hook), node('span', 'review-badge', 'Bozza · revisione umana necessaria'), node('h4', '', 'La storia, slide per slide'));
+  detail.append(node('p', 'eyebrow', `SCENEGGIATURA / ${content.category.toUpperCase()}`), node('h3', '', content.title), node('p', 'hook', content.hook), node('span', 'review-badge', `${statusLabel(content.status)} · revisione ${content.revision}`), node('h4', '', 'La storia, slide per slide'));
   const slides = node('ol', 'slides');
   content.slides.forEach((slide, i) => {
     const item = node('li', 'slide');
@@ -63,7 +63,21 @@ function renderDetail(content) {
     link.target = '_blank'; link.rel = 'noopener noreferrer';
     li.append(link); sources.append(li);
   });
-  detail.append(sources, node('p', 'verification', `DA CONTROLLARE — ${content.verification_notes} Le fonti non sono verificate automaticamente.`), node('h4', '', 'Caption'), node('p', 'caption', content.caption), node('h4', '', 'Porta la storia fuori dal laboratorio'));
+  detail.append(sources, node('p', 'verification', `DA CONTROLLARE — ${content.verification_notes} Le fonti non sono verificate automaticamente.`), node('h4', '', 'Caption'), node('p', 'caption', content.caption));
+  renderEditorial(content, detail);
+  detail.append(node('h4', '', 'Porta la storia fuori dal laboratorio'));
+  const settings = node('div', 'video-options');
+  const style = node('select');
+  style.setAttribute('aria-label', 'Stile Reel');
+  for (const [value, label] of [['dynamic', 'Reel dinamico · zoom e dissolvenze'], ['static', 'Reel statico · compatibilità MVP']]) {
+    const option = node('option', '', label); option.value = value; style.append(option);
+  }
+  const audio = node('select');
+  audio.setAttribute('aria-label', 'Audio Reel');
+  for (const [value, label] of [['none', 'Senza audio'], ['original', 'Sottofondo originale · CC0']]) {
+    const option = node('option', '', label); option.value = value; audio.append(option);
+  }
+  settings.append(style, audio); detail.append(settings);
   const actions = node('div', 'export-actions');
   const downloads = node('div', 'downloads');
   downloads.setAttribute('aria-live', 'polite');
@@ -76,14 +90,22 @@ function renderDetail(content) {
       button.textContent = 'Preparazione…';
       notice('Esportazione in corso. Il Reel può richiedere fino a 3 minuti.');
       try {
-        const artifact = await api(`/api/contents/${content.id}/exports`, post({kind}));
+        const artifact = await api(`/api/contents/${content.id}/exports`, post({kind, style: style.value, audio: audio.value}));
         const link = node('a', 'download', `Scarica ${artifact.filename} ↗`);
         link.href = artifact.download_url; link.download = artifact.filename;
         // Keep the completed download accessible even if selection changed meanwhile.
         const completed = node('a', 'download', `Scarica ${artifact.filename} ↗`);
         completed.href = artifact.download_url; completed.download = artifact.filename;
         downloads.append(link);
-        notice('File pronto. Nessuna pubblicazione effettuata. ');
+        if (kind === 'reel') {
+          const srt = node('a', 'secondary', 'Scarica sottotitoli SRT');
+          srt.href = `${artifact.download_url}/subtitles`; srt.download = 'subtitles.srt'; downloads.append(srt);
+          if (artifact.audio === 'original') {
+            const license = node('a', 'secondary', 'Licenza audio CC0');
+            license.href = `${artifact.download_url}/audio-license`; downloads.append(license);
+          }
+        }
+        notice(`File pronto. ${artifact.render_note || 'Nessuna pubblicazione effettuata.'} `);
         $('#notice').append(completed);
       } catch (error) { notice(error.message, true); }
       finally {
@@ -97,7 +119,7 @@ function renderDetail(content) {
   const caption = node('a', 'secondary', '↓ Caption e fonti');
   caption.href = `/api/contents/${content.id}/caption`; caption.download = 'caption.txt';
   actions.append(caption);
-  detail.append(actions, downloads, node('p', 'export-note', 'Carosello: PNG 1080 × 1350 in ZIP. Reel: MP4 1080 × 1920, 4 secondi per slide, senza audio. Tutti i visual includono “bozza · da verificare”.'));
+  detail.append(actions, downloads, node('p', 'export-note', 'Carosello: PNG 1080 × 1350 in ZIP. Reel: MP4 1080 × 1920, 4 secondi per slide, sottotitoli attivabili e scaricabili, audio originale opzionale. Esportazioni di anteprima con avviso di revisione; nessuna pubblicazione.'));
 }
 $('#generate-form').addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -110,6 +132,7 @@ $('#generate-form').addEventListener('submit', async (event) => {
     selectedId = generated[0].id;
     renderList(); renderDetail(generated[0]);
     notice(`${generated.length} bozze create. Verifica sempre le fonti prima di condividere.`);
+    refreshUsage();
   } catch (error) { notice(error.message, true); }
   finally { button.disabled = false; button.textContent = '✦ Genera curiosità ↗'; }
 });

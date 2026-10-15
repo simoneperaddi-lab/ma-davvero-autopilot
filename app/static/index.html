@@ -7,6 +7,7 @@
   <title>MA DAVVERO? — Content Studio</title>
   <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/phase2.js" defer></script>
   <script src="/static/app.js" defer></script>
 </head>
 <body>
@@ -28,6 +29,7 @@
       <form id="generate-form"><div class="form-grid"><label>Universo da esplorare<select name="category" id="category"><option value="tutte">Tutte le curiosità</option value="spazio">Spazio & pianeti</option><option value="natura">Natura & animali</option><option value="corpo">Corpo & cervello</option></select></label><label>Un tema in mente? <span class="optional">Facoltativo · con OpenAI</span><input id="topic" name="topic" maxlength="160" placeholder="Es. i segreti del sistema solare"></label><label>Quante idee?<select name="count" id="count"><option value="1">1 idea</option><option value="2">2 idee</option><option value="3" selected>3 idee</option></select></label></div><div class="form-bottom"><p id="provider-note">La demo propone esempi editoriali con fonti suggerite.</p><button class="primary" type="submit" id="generate-button">✦ Genera curiosità <span>↗</span></button></div></form>
     </section>
     <p id="notice" role="status" aria-live="polite"></p>
+    <p id="usage-report" class="controls-bar" role="status">Caricamento limiti OpenAI…</p>
     <section id="library" aria-labelledby="library-title"><div class="section-heading library-heading"><div><p class="eyebrow">02 / COSTRUISCI</p><h2 id="library-title">Sul tavolo di lavoro</h2></div><span id="library-count" class="muted">0 contenuti</span></div><div class="workspace"><div id="content-list" class="content-list"></div><section id="detail" class="detail panel" aria-label="Sceneggiatura selezionata"><div class="empty"><span class="empty-icon">✳</span><h3>Ogni storia parte da una domanda.</h3><p>Genera le prime idee e seleziona una scheda per esplorare sceneggiatura, fonti e formati.</p></div></section></div></section>
     <footer>MA DAVVERO? <span>Curiosità, con criterio.</span><small>MVP · Nessuna pubblicazione automatica</small></footer>
   </main>

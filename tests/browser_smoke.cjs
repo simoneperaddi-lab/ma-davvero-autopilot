@@ -10,7 +10,11 @@ const { chromium } = require('playwright');
     args: ['--no-sandbox'],
   });
   try {
-    const page = await browser.newPage({ viewport: { width: 390, height: 844 }, acceptDownloads: true });
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 }, acceptDownloads: true,
+      ...(process.env.MAD_BROWSER_USERNAME && process.env.MAD_BROWSER_PASSWORD ? {
+        httpCredentials: {username: process.env.MAD_BROWSER_USERNAME, password: process.env.MAD_BROWSER_PASSWORD},
+      } : {}),
+    });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto('http://127.0.0.1:8000');
@@ -31,6 +35,25 @@ const { chromium } = require('playwright');
     const download = await downloadPromise;
     assert.equal(download.suggestedFilename(), 'carosello.zip');
     assert.equal(await download.failure(), null);
+    await page.getByRole('button', { name: 'Collega fonte suggerita 1', exact: true }).click();
+    await page.locator('.research-result').first().waitFor();
+    assert.match(await page.locator('.research-result').first().textContent(), /Non recuperata/);
+    await page.getByLabel('Motivazione', { exact: true }).fill('Revisione umana iniziata dal test browser.');
+    await page.getByRole('button', { name: 'Registra decisione', exact: true }).click();
+    await page.locator('#detail > .review-badge').filter({hasText: 'In revisione'}).waitFor();
+    await page.getByLabel('Motivazione', { exact: true }).fill('Tentativo senza affermazioni ancora verificate.');
+    await page.getByRole('button', { name: 'Registra decisione', exact: true }).click();
+    await page.locator('#notice.error').filter({hasText: 'Approvazione bloccata'}).waitFor();
+    const claim = page.locator('.claim-record').first();
+    await claim.locator('summary').click();
+    await claim.getByLabel('Motivazione del revisore').fill('Evidenza ancora insufficiente, esito incerto nel test.');
+    await claim.getByRole('button', {name: 'Registra verifica umana'}).click();
+    await page.locator('.claim-record').first().locator('summary').filter({hasText: 'Incerta'}).waitFor();
+    await page.getByLabel('Prossimo stato').selectOption('rifiutato');
+    await page.getByLabel('Motivazione', { exact: true }).fill('Bozza rifiutata nel test: mancano evidenze sufficienti.');
+    await page.getByRole('button', {name: 'Registra decisione', exact: true}).click();
+    await page.locator('#detail > .review-badge').filter({hasText: 'Rifiutato'}).waitFor();
+    assert(await page.locator('.audit-trail li').count() >= 5);
     for (const width of [320, 390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Horizontal overflow at ${width}px`);
@@ -40,6 +63,6 @@ const { chromium } = require('playwright');
     await page.reload();
     await page.waitForFunction((expected) => Number(document.querySelector('#total').textContent) === expected, initial + 3);
     assert.deepEqual(errors, []);
-    console.log('PASS: generation, selection, 5 slides, sources, ZIP download, persistence, 320/390/1440px layout; no JS errors.');
+    console.log('PASS: MVP flow, ZIP download, source attachment, review, blocked approval, human uncertainty, rejection, audit, persistence, 320/390/1440px layout; no JS errors.');
   } finally { await browser.close(); }
 })().catch((error) => { console.error(error); process.exitCode = 1; });
