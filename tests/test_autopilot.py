@@ -293,7 +293,8 @@ def test_live_requires_explicit_optin_and_main(monkeypatch, enabled, ref):
 
 
 def test_cli_failure_does_not_leak_secrets(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(Archive, 'select', lambda *a: (_ for _ in ()).throw(ValueError('TOP-SECRET')))
+    from autopilot.__main__ import Archive as ProductionArchive
+    monkeypatch.setattr(ProductionArchive, 'select', lambda *a: (_ for _ in ()).throw(ValueError('TOP-SECRET')))
     assert main(['--mode', 'verify', '--output', str(tmp_path)]) == 1
     assert 'TOP-SECRET' not in capsys.readouterr().err
     assert 'TOP-SECRET' not in (tmp_path / 'report.md').read_text()

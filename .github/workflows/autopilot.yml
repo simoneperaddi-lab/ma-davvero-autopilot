@@ -79,4 +79,6 @@ jobs:
             data/autopilot/contact-sheet.jpg
             data/autopilot/frames/*.jpg
             data/autopilot/report.md
+            data/autopilot/technical-report.json
+            data/autopilot/sources/*.txt
           retention-days: 1

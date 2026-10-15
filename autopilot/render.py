@@ -16,6 +16,9 @@ PREVIEW_TIMES = [.5, 3.25, 6.25, 8.75, 11.25, 13.75, 16.25, 18.75]
 
 
 def render(fact, directory, audio=True):
+    if "documentary" in fact:
+        from autopilot.cinema_render import render as cinematic_render
+        return cinematic_render(fact, directory, audio=audio)
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     scene = OrbitalScene(fact['source_row'], simulation=fact.get('simulation', False))
