@@ -1,108 +1,114 @@
-# MA DAVVERO? — Content Studio
+# MA DAVVERO? — Content Studio, fase 2
 
-MVP per creare contenuti di divulgazione scientifica in italiano: FastAPI, dashboard responsive senza build JavaScript, generazione demo o OpenAI, archivio SQLite o Supabase, rendering Pillow e FFmpeg.
+Studio editoriale italiano per curiosità scientifiche: FastAPI, dashboard responsive, SQLite/Supabase, OpenAI opzionale, ricerca Crossref e video Pillow/FFmpeg. Implementa la issue #2 sopra il branch MVP. **Nessuna integrazione o pubblicazione Instagram; nessun servizio a pagamento attivato.**
 
-**Non pubblica su Instagram.** Nessun token Meta, scheduler o endpoint di pubblicazione. Ogni contenuto rimane una **bozza da verificare**: citare una fonte non certifica una notizia. Le esportazioni includono un avviso di revisione.
+## Avvio locale senza credenziali
 
-## Avvio rapido
-
-Richiede Python 3.12, FFmpeg con encoder libx264 e, consigliato, font DejaVu Sans. Su Ubuntu/Debian: `sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core`.
+Python 3.12, FFmpeg con libx264/xfade/mov_text/AAC, ffprobe e font DejaVu Sans consigliati. Debian/Ubuntu: `sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core`.
 
 ```bash
 git clone https://github.com/simoneperaddi-lab/ma-davvero-autopilot.git
 cd ma-davvero-autopilot
-# Per provare la PR prima del merge:
-git switch feat/mvp-dashboard-content-studio
+git switch feat/phase2-editorial-studio
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt -c requirements.lock
-cp .env.example .env
-.venv/bin/python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+# Solo se .env non esiste già: non sovrascrivere configurazioni esistenti.
+cp -n .env.example .env
+.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --no-proxy-headers
 ```
 
-Apri `http://127.0.0.1:8000` sul tuo computer. La documentazione interattiva delle API è in `/docs`. Esegui i comandi dalla radice del repository. La demo non richiede API key, servizi esterni o migrazioni: crea `data/studio.sqlite3` al primo avvio e conserva le bozze dopo il riavvio.
+Apri la porta 8000 sul tuo computer; `/docs` espone le API. Esegui dalla radice del repository. L'esempio `.env` seleziona esplicitamente `MAD_AUTH_MODE=local`: permette accessi senza password **solo da loopback**. Senza questa opzione il default è Basic auth e l'avvio fallisce se manca una password di almeno 16 caratteri. Non usare la modalità locale dietro proxy o tunnel. Per smartphone/cloud usa la configurazione privata protetta in [docs/deployment.md](docs/deployment.md).
 
-### Provare il flusso completo
+## Flusso completo
 
-1. Nella dashboard premi **Genera curiosità**. La demo contiene tre esempi fissi: Venere, polpi e cervello. La categoria filtra l'esempio; richieste multiple nella stessa categoria ripetono quell'esempio. Il tema libero è disponibile solo con OpenAI.
-2. Seleziona una scheda per leggere hook, sceneggiatura, caption, fonti e note di verifica.
-3. Esporta **Carosello PNG**: ZIP con una PNG 1080 × 1350 per slide e `caption.txt` con fonti e avvisi.
-4. Esporta **Reel verticale**: MP4 H.264 1080 × 1920, 24 fps, 4 secondi per slide. È un montaggio statico senza audio, voce o musica: 5 slide producono 20 secondi. Scarica separatamente **Caption e fonti**.
-5. Ricarica la pagina: le bozze devono essere ancora presenti. Controlla le fonti manualmente prima di qualsiasi condivisione.
+1. **Genera curiosità** crea fino a tre esempi demo fissi (Venere, polpi, cervello). Nella stessa categoria si ripete l'esempio; il tema libero richiede OpenAI. I dati rimangono in `data/studio.sqlite3` dopo il riavvio.
+2. Apri la scheda: titolo, hook, slide, caption, fonti suggerite e affermazioni da revisionare, inclusi titolo/hook/caption.
+3. **Ricerca Crossref** consulta un registro pubblico gratuito: titolo, DOI, autori, anno, editore e abstract se disponibile. Collega un risultato alla bozza oppure una fonte suggerita. Non viene inventata una bibliografia di fallback se il registro non risponde.
+4. **Recupera / ricontrolla testo** registra accesso alla pagina, testo estratto, data e SHA-256. Leggi il testo nella dashboard. Raggiungibilità, metadati e presenza di DOI **non equivalgono a verifica scientifica**.
+5. Per ciascuna affermazione scegli **supportata**, **contraddetta** o **incerta**, con motivazione. Supportata/contraddetta richiedono una fonte recuperata negli ultimi 7 giorni e un passaggio di almeno 10 caratteri presente nel testo estratto. Il server verifica la corrispondenza testuale; **il revisore valuta significato, attendibilità e pertinenza**. Non c'è un classificatore automatico della verità.
+6. Porta la bozza **in revisione**, quindi **approva** o **rifiuta** con motivazione. L'approvazione richiede tutte le affermazioni supportate da evidenze umane coerenti e recenti. Non basta una fonte generata da LLM o proveniente da Crossref. Per cambiare una bozza approvata/rifiutata devi riaprirla. La cronologia conserva autore, data UTC e dettagli.
+7. Esporta carosello o Reel per revisione. Anche le bozze possono essere esportate: tutti i visual mantengono l'avviso di bozza. **Nessuno stato editoriale attiva una pubblicazione.**
 
-L'esportazione è sincrona con un solo render alla volta per processo, timeout FFmpeg di 180 secondi e due thread di encoding. Il pulsante segnala l'attesa; il download appare al termine. File e metadati degli export rimangono in `data/exports/`, esclusa da Git. Non è prevista pulizia automatica: sorveglia lo spazio disco. Non avviare più worker per questa versione.
+Transizioni: `da_verificare → in_revisione → approvato/rifiutato`; da revisione, approvato o rifiutato si può tornare a `da_verificare`. Ogni modifica richiede la `revision` corrente; un aggiornamento concorrente risponde `409`. Fonti cambiate/non raggiungibili invalidano le verifiche collegate. L'approvazione è un atto editoriale alla data indicata, non un monitoraggio permanente della verità.
 
-## OpenAI (opzionale)
+## Ricerca: rete e limiti
 
-Imposta nella tua `.env` o nelle variabili d'ambiente, senza committare credenziali:
+La ricerca usa `https://api.crossref.org/works`. I link arrivano dal registro DOI, non da un LLM: non garantiscono peer review o qualità. I metadati possono essere incompleti/errati e gli abstract possono mancare. Query inglesi sono spesso più efficaci.
 
-```dotenv
-MAD_PROVIDER=openai
-OPENAI_API_KEY=
-MAD_OPENAI_MODEL=gpt-4.1-mini
-```
+Il recupero usa la allowlist fissa di `app/research.py`: Crossref, NASA Science, Smithsonian Ocean, doi.org, PNAS, PubMed/PMC, Nature, Science e PLOS (host esatti). Solo HTTPS, niente credenziali o porte alternative; ogni redirect viene rivalidato. Massimo 4 richieste, 12 secondi per richiesta e 500 KB decodificati per risposta; al massimo 100.000 caratteri conservati per fonte e 8 fonti per contenuto. Niente PDF, paywall o login dei publisher. Redirect fuori allowlist vengono bloccati, senza aggirare restrizioni del sito.
 
-Inserisci la chiave esclusivamente nella configurazione sicura dell'ambiente. Il backend usa la Responses API con output strutturato e validazione Pydantic. Richiede accesso HTTPS a `api.openai.com`, un account con credito e un modello compatibile con Structured Outputs. Il tema viene inviato a OpenAI e può generare costi. Riavvia dopo aver cambiato configurazione.
+In cloud vanno consentiti i domini effettivamente utilizzati. Le prove iniziali live di Crossref e NASA hanno ricevuto `403` dalla rete; nella bozza delle impostazioni sono state salvate le aggiunte necessarie. I test offline non provano raggiungibilità nel deployment.
 
-Non viene eseguita ricerca web o verifica automatica delle fonti: anche gli URL e le affermazioni prodotti da OpenAI devono essere controllati. Se mancano credenziali o l'API fallisce, viene restituito un errore esplicito, senza sostituire di nascosto l'output con dati demo.
+## Reel e caroselli
 
-## Supabase (opzionale)
+- Caroselli: ZIP con PNG RGB 1080×1350 per slide e `caption.txt` con fonti, stato e riepilogo delle verifiche.
+- Reel statici compatibili con l'MVP o dinamici: MP4 H.264, yuv420p, 1080×1920, 24 fps, 4 secondi per slide. Il dinamico aggiunge zoom leggero e dissolvenze incrociate di 0,4 secondi.
+- Sottotitoli italiani temporizzati: traccia MP4 `mov_text` e SRT scaricabile. Sono il testo delle slide, non una trascrizione vocale. Il lettore deve supportare/attivare la traccia; non sono impressi nel video.
+- Audio opzionale **originale** sintetizzato localmente con onde sinusoidali, senza campioni o download esterni; AAC e dichiarazione CC0 scaricabile. Nessuna voce/TTS, servizio a pagamento o musica commerciale. Codice e dichiarazione in `app/video.py`.
+- Se il filtro dinamico fallisce rapidamente, viene provato il fallback statico, dichiarato in `render_note` e nella dashboard. Timeout condiviso di 180 secondi, due thread di encoding e uno di filtri; una sola esportazione per processo.
 
-1. Crea un progetto Supabase e applica manualmente `supabase/schema.sql` nell'editor SQL.
-2. Imposta `MAD_STORAGE=supabase`, `SUPABASE_URL=https://<progetto>.supabase.co` e `SUPABASE_SERVICE_ROLE_KEY` nell'ambiente backend.
-3. Consenti HTTPS verso il dominio del progetto e riavvia il server.
+Export, SRT e licenze richiedono autenticazione e il contenuto associato deve esistere. I file rimangono in `data/exports/` con versione e metadati: non c'è pulizia automatica. Gli export già creati rappresentano quella revisione e non vengono riscritti quando cambia lo stato editoriale.
 
-L'adapter usa le API REST Supabase; RLS è attiva e non ci sono policy pubbliche. Solo il backend usa la service role key, mai il browser. Le bozze SQLite esistenti **non** vengono migrate automaticamente. Gli export rimangono su disco locale anche con Supabase; il bucket Storage non è ancora implementato. La chiave deve essere disponibile al backend attraverso la configurazione supportata dall'ambiente; non è necessario per la demo.
+## OpenAI e budget (opzionale, spento per default)
+
+La demo non richiede chiavi. Per un uso futuro servono **tutti esplicitamente**: `MAD_PROVIDER=openai`, `OPENAI_API_KEY` lato server, `MAD_PAID_ENABLED=true`, limiti giornalieri di chiamate e costo, limite per chiamata e tariffe positive input/output per milione di token. Le variabili sono in `.env.example`, senza credenziali o valori che attivino pagamenti. Richiede `api.openai.com` oltre a Crossref. Solo `gpt-4.1-mini` è abilitato; altri modelli richiedono aggiornamento e verifica della policy.
+
+Prima dell'API a pagamento vengono cercate fonti in Crossref. Senza risultati o con ricerca fallita non viene chiamato OpenAI. Il prompt include metadati disponibili; gli URL restituiti devono coincidere con il registro e i titoli vengono canonicalizzati. Output con URL/DOI nei campi narrativi vengono scartati. I testi rimangono bozze: il vincolo bibliografico non garantisce la correttezza scientifica delle affermazioni o di nomi/riferimenti testuali eventualmente generati.
+
+L'SDK usa Structured Outputs, timeout 45 secondi e **zero retry automatici**. Prompt troppo grandi vengono rifiutati. Prima dell'invio si prenota atomicamente il costo conservativo di 20.000 token input e 6.000 output alle tariffe configurate. Numero di richieste e somma delle riserve non possono superare i limiti giornalieri UTC. Nessun rimborso delle riserve per timeout, rifiuti, parsing fallito o crash: il provider potrebbe avere già addebitato l'operazione. Quando disponibili vengono riportati separatamente i token reali.
+
+`GET /api/usage` e dashboard mostrano chiamate, riserve, budget, token riportati e stati. È **contabilità applicativa conservativa, non una fattura OpenAI**: dipende da tariffe corrette e non copre altri client/account o variazioni di listino. Imposta anche i limiti nell'account provider prima di un uso reale. Nessuna chiamata pagata è stata effettuata durante sviluppo e test.
+
+## Sicurezza
+
+In cloud Basic auth protegge dashboard, asset, API, documentazione, file e report; compare il prompt del browser. Nessuna password in JavaScript/localStorage. Usa TLS e rete privata: [docs/deployment.md](docs/deployment.md).
+
+Limiti persistenti su finestre di minuto: API totali (default 120), generazione (6), export (4), ricerca/collegamento/controllo fonti (10), operazioni editoriali (30). Login falliti: 20/minuto per IP diretto, senza fidarsi di `X-Forwarded-For`. Un proxy può far condividere questo limite ai client: non è un WAF. Mutazioni solo JSON, corpo ≤32 KB e origine coerente; browser cross-site rifiutati. Risposte `no-store`, `nosniff`, frame vietati e CSP sulla dashboard. Nessuna interpretazione HTML dei testi generati.
+
+Account editor unico, senza separazione autore/revisore, RBAC, MFA, sessioni revocabili o multi-tenant. L'audit è append-only **attraverso l'API**, non antimanomissione contro chi controlla database/filesystem.
+
+## Supabase e compatibilità
+
+SQLite è il default. Supabase REST richiede `MAD_STORAGE=supabase`, URL HTTPS e service role key backend. Applica manualmente `supabase/schema.sql` anche a progetti esistenti: la fase 2 aggiunge `UPDATE` al ruolo di servizio. RLS resta attiva senza policy pubbliche; non eseguiamo migrazioni sul tuo account. Le PATCH editoriali sono condizionate alla revisione corrente.
+
+I payload MVP senza nuovi campi restano leggibili, con affermazioni a ID deterministici e revisione 0. Non cancelliamo o migriamo automaticamente dati originali. Cache di ricerca, rate limiting e budget rimangono nel database locale `data/controls.sqlite3` anche con Supabase. Export su disco locale. Supportata **una sola macchina e un solo worker** con disco persistente: niente repliche con ledger separati. Backup di tutta `data/`, non solo delle bozze. OpenAI e Supabase non verificati con credenziali live.
 
 ## Test
 
 ```bash
 .venv/bin/python -m pytest -q
+.venv/bin/python -m pip check
 ```
 
-La suite verifica API, validazione, persistenza dopo riapertura, caption, file PNG/ZIP, MP4 reale con ffprobe, errori di encoding, concorrenza ed adapter esterni con risposte simulate. Il test MP4 viene saltato solo se FFmpeg o ffprobe non sono installati; installali per la verifica completa. Nessun test chiama API a pagamento. La CI GitHub Actions installa anche FFmpeg ed esegue la suite.
+Una fixture automatica vieta connessioni reali: Crossref, publisher, OpenAI e Supabase usano mock, senza segreti o costi. SQLite, HTTP in-process e FFmpeg/ffprobe sono reali. Verifiche video: dimensioni/durata/codec, fotogrammi differenti, sottotitoli/audio e fallback. CI installa FFmpeg; senza FFmpeg/ffprobe i test video marcati vengono saltati. Sono mantenuti anche i test MVP.
 
-Test facoltativo del browser reale (server demo già avviato sulla porta 8000):
+Browser reale facoltativo, server demo attivo sulla porta 8000:
 
 ```bash
 npm install --prefix /tmp/ma-browser playwright
-# Se Chromium non è già installato, installare il browser tramite Playwright:
 NODE_PATH=/tmp/ma-browser/node_modules node /tmp/ma-browser/node_modules/playwright/cli.js install chromium
 NODE_PATH=/tmp/ma-browser/node_modules node tests/browser_smoke.cjs
-# Per usare Chromium di sistema, aggiungere CHROMIUM_PATH=/usr/bin/chromium.
+# Se Chromium è già nel sistema: CHROMIUM_PATH=/usr/bin/chromium.
 ```
 
-Il test browser crea tre bozze demo nell'archivio corrente e verifica generazione, selezione, download ZIP, persistenza e layout a 320, 390 e 1440 pixel. Salva screenshot in `/tmp/ma-davvero-*.png`. Usa un archivio demo di prova se vuoi conservare intatta la tua libreria. `requirements.lock` conserva le versioni Python transitive effettivamente validate su Python 3.12.
-
-Smoke test API con server in esecuzione:
-
-```bash
-curl --fail http://127.0.0.1:8000/api/health
-curl --fail -X POST http://127.0.0.1:8000/api/generate \
-  -H 'Content-Type: application/json' -d '{"category":"spazio","count":1}'
-curl --fail http://127.0.0.1:8000/api/contents
-```
+Il test crea tre bozze nell'archivio corrente e verifica creazione, selezione, fonti, download, workflow e persistenza. Screenshot in `/tmp/ma-davvero-*.png`; usa un archivio demo di prova. Con Basic auth il test può ricevere `MAD_BROWSER_USERNAME` e `MAD_BROWSER_PASSWORD` come variabili d'ambiente, mai stampate.
 
 ## Struttura
 
 ```text
-app/
-  main.py              # FastAPI, dashboard, API e download
-  config.py            # Configurazione .env / ambiente
-  models.py            # Contratti e validazione
-  generation.py        # Provider demo e OpenAI
-  demo.py              # Esempi scientifici con fonti suggerite
-  storage.py           # SQLite / Supabase REST
-  media.py             # Caroselli PNG e Reel FFmpeg
-  static/              # Dashboard HTML, CSS e JavaScript
-supabase/schema.sql    # Schema e RLS
-tests/                 # Suite automatica
-.github/workflows/     # CI
-.env.example
-requirements.txt
+app/main.py, config.py, models.py    API, contratti, configurazione
+app/generation.py, demo.py          provider e demo
+app/research.py, editorial.py       fonti, evidenze, workflow
+app/security.py, controls.py        accessi, limiti, budget
+app/storage.py                     SQLite/Supabase con revisioni
+app/media.py, video.py              caroselli, Reel, SRT, audio
+app/static/                        dashboard mobile senza build JS
+supabase/schema.sql                schema e permessi
+tests/                             regressioni e fase 2
+docs/deployment.md                  deployment privato
+.github/workflows/tests.yml         CI
+.env.example                       opzioni senza segreti
+requirements.txt, requirements.lock dipendenze validate
 ```
 
-## Limiti del prototipo
-
-Questa versione è per **sviluppo locale o ambiente privato con un solo utente**. Non include login, autorizzazioni, quote, limitazione delle richieste o isolamento tra utenti: non esporla direttamente su Internet, soprattutto con chiavi API configurate. Per accedere da smartphone usa un accesso privato protetto alla macchina che esegue il server; il layout si adatta allo schermo, ma l'MVP non configura hosting o autenticazione. In cloud usa solo gli strumenti di accesso privato forniti dalla piattaforma.
-
-Non sono implementati: raccolta automatica di fonti, fact-checking, approvazione editoriale, editing delle bozze, immagini AI, TTS, montaggio animato, calendario, analytics e pubblicazione Instagram. I dati demo non sono presentati come verificati. OpenAI e Supabase richiedono una verifica live con le credenziali dell'utente; i test automatici verificano i loro contratti con mock.
+Fuori scope: revisione sistematica della letteratura, fact-checking semantico automatico, PDF, editing del testo, immagini AI/TTS, calendario, analytics, Instagram e architettura distribuita. Nessuno stato editoriale attiva effetti esterni.
