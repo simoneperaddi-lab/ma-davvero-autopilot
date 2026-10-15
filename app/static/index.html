@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10251e">
+  <title>MA DAVVERO? — Content Studio</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="/" class="brand">MA<br>DAVVERO<span>?</span></a>
+    <span class="brand-sub">IL TUO LABORATORIO DI CURIOSITÀ</span>
+    <nav aria-label="Navigazione principale">
+      <a href="#studio" class="nav-active"><span>◈</span> Content studio</a>
+      <a href="#library"><span>▤</span> Libreria contenuti</a>
+      <a href="/docs" target="_blank" rel="noopener"><span>↗</span> API & strumenti</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="dot"></span> SOLO CREAZIONE<br><small>Pubblicazione Instagram disattivata</small></div>
+  </aside>
+  <main id="studio">
+    <header class="topbar"><span>WORKSPACE / CONTENT STUDIO</span><span class="mode" id="mode">Connessione…</span></header>
+    <section class="intro"><div><p class="eyebrow">PICCOLE DOMANDE. GRANDI SCOPERTE.</p><h1>La prossima curiosità<br>comincia qui<span>.</span></h1><p class="subtitle">Dall’idea alla storia. Un laboratorio per raccontare la scienza,<br class="desktop"> con le fonti sempre a portata di mano.</p></div><div class="orbit" aria-hidden="true"><div class="orbit-ring"></div><span>?</span><small>RESTA CURIOSO</small></div></section>
+    <section class="stats" aria-label="Riepilogo contenuti"><div><span class="stat-label">NEL LABORATORIO</span><strong id="total">0</strong><small>idee e sceneggiature</small></div><div><span class="stat-label">REVISIONE EDITORIALE</span><strong id="pending">0</strong><small>bozze da verificare</small></div><div><span class="stat-label">IL PROSSIMO PASSO</span><strong class="stat-word">Verifica le fonti ↗</strong><small>Prima di condividere, controlla.</small></div></section>
+    <section class="generator panel" aria-labelledby="generate-title"><div class="section-heading"><div><p class="eyebrow">01 / ESPLORA</p><h2 id="generate-title">Accendi un’idea</h2></div><span class="tag">AI CONTENT LAB</span></div>
+      <form id="generate-form"><div class="form-grid"><label>Universo da esplorare<select name="category" id="category"><option value="tutte">Tutte le curiosità</option value="spazio">Spazio & pianeti</option><option value="natura">Natura & animali</option><option value="corpo">Corpo & cervello</option></select></label><label>Un tema in mente? <span class="optional">Facoltativo · con OpenAI</span><input id="topic" name="topic" maxlength="160" placeholder="Es. i segreti del sistema solare"></label><label>Quante idee?<select name="count" id="count"><option value="1">1 idea</option><option value="2">2 idee</option><option value="3" selected>3 idee</option></select></label></div><div class="form-bottom"><p id="provider-note">La demo propone esempi editoriali con fonti suggerite.</p><button class="primary" type="submit" id="generate-button">✦ Genera curiosità <span>↗</span></button></div></form>
+    </section>
+    <p id="notice" role="status" aria-live="polite"></p>
+    <section id="library" aria-labelledby="library-title"><div class="section-heading library-heading"><div><p class="eyebrow">02 / COSTRUISCI</p><h2 id="library-title">Sul tavolo di lavoro</h2></div><span id="library-count" class="muted">0 contenuti</span></div><div class="workspace"><div id="content-list" class="content-list"></div><section id="detail" class="detail panel" aria-label="Sceneggiatura selezionata"><div class="empty"><span class="empty-icon">✳</span><h3>Ogni storia parte da una domanda.</h3><p>Genera le prime idee e seleziona una scheda per esplorare sceneggiatura, fonti e formati.</p></div></section></div></section>
+    <footer>MA DAVVERO? <span>Curiosità, con criterio.</span><small>MVP · Nessuna pubblicazione automatica</small></footer>
+  </main>
+</body>
+</html>
