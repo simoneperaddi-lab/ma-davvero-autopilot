@@ -3,7 +3,7 @@ import base64
 import json
 from pathlib import Path
 
-from autopilot.http import RemoteError
+from autopilot.http import Blocked, RemoteError
 
 
 def empty_state():
@@ -12,9 +12,9 @@ def empty_state():
 
 def check_state(value):
     if not isinstance(value, dict) or value.get("version") != 1:
-        raise ValueError("Registro assente o incompatibile: non azzerarlo per riprovare")
+        raise Blocked("Registro assente o incompatibile: non azzerarlo per riprovare")
     if not isinstance(value.get("entries"), list) or not isinstance(value.get("events"), list):
-        raise ValueError("Registro corrotto")
+        raise Blocked("Registro corrotto")
     return value
 
 
@@ -57,7 +57,7 @@ class GitHubState:
                 if branch_error.status != 404:
                     raise
             else:
-                raise ValueError("Branch del registro esistente senza ledger.json")
+                raise Blocked("Branch del registro esistente senza ledger.json")
             # Bootstrap from current workflow SHA, never reset or modify main.
             import os
             commit = os.environ["GITHUB_SHA"]
@@ -75,7 +75,7 @@ class GitHubState:
             latest = self.http.json("GET", self.root + "/contents/ledger.json", headers=self.headers,
                                     params={"ref": self.branch})
             if latest["sha"] != self.sha:
-                raise ValueError("Registro modificato durante la lettura")
+                raise Blocked("Registro modificato durante la lettura")
             return check_state(value)
         return check_state(json.loads(base64.b64decode(data["content"])))
 

@@ -3,6 +3,10 @@ import time
 import httpx
 
 
+class Blocked(ValueError):
+    """Application-defined, non-secret diagnostic safe for operator logs."""
+
+
 class RemoteError(RuntimeError):
     def __init__(self, status=0):
         self.status = status

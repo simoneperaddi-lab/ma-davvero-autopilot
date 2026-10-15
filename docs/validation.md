@@ -5,16 +5,16 @@ Branch `feat/zero-cost-instagram-autopilot`, derivato dalla fase 2; PR unica ver
 ## Risultati attuali
 
 - Baseline fase 2: **67 test passati**, zero saltati.
-- Suite integrata: **102 test passati**, zero saltati, circa 45 secondi. Rimane un warning di deprecazione Starlette/AnyIO esterno al progetto.
-- 35 nuovi test: dati scientifici insufficienti/controversi/incoerenti, derivazione numerica, fonti vere come contratto HTTP simulato, deduplicazione persistente, scrittura del ledger fallita, risposta publish persa, riconciliazione, blocco degli esiti ambigui, scadenza delle evidenze, rinnovo token e fallimento del secret store, cifratura GitHub verificata decifrando con una chiave di test, CAS GitHub, protezione dell’URL di upload, attivazione negata fuori main/senza opt-in.
+- Suite integrata: **106 test passati**, zero saltati, circa 50 secondi. Rimane un warning di deprecazione Starlette/AnyIO esterno al progetto.
+- 39 nuovi test: dati scientifici insufficienti/controversi/incoerenti, derivazione numerica, fonti vere come contratto HTTP simulato, deduplicazione persistente, scrittura del ledger fallita, risposta publish persa, riconciliazione, blocco degli esiti ambigui, scadenza delle evidenze, rinnovo token e fallimento del secret store, cifratura GitHub verificata decifrando con una chiave di test, CAS GitHub, protezione dell’URL di upload, attivazione negata fuori main/senza opt-in.
 - E2E offline con FFmpeg reale: MP4 H.264 1080×1920, 24 fps, 20 secondi, AAC 48 kHz, testo impresso, SRT esterno e dichiarazione audio CC0. Due passaggi della pipeline producono una sola pubblicazione simulata. La fixture sintetica è marcata NON PUBBLICARE.
 - Tutti i test vietano rete/DNS: nessun segreto reale e nessuna chiamata pagata. Contratti Meta/GitHub simulati; questo non certifica permessi o compatibilità live del proprio account.
-- `pip check`, `compileall` e `git diff --check` superati.
-- Le richieste di sola lettura a NASA/Meta da questo ambiente cloud sono state bloccate dal proxy. È prevista una verifica separata in CI del catalogo NASA e del rendering, senza token Instagram; il risultato va letto nei check della PR.
+- `pip check`, `compileall`, `git diff --check` e `actionlint` 1.7.7 su entrambi i workflow superati (binario verificato contro il checksum della release). Test integrato aggiuntivo con gli adapter HTTP reali NASA → GitHub → Instagram su trasporto simulato: stato durevole prima del POST, upload singolo, secondo ciclo senza duplicati.
+- Le richieste di sola lettura a NASA/Meta da questo ambiente cloud sono state bloccate dal proxy. La verifica separata del catalogo NASA e del rendering è **passata su GitHub Actions** senza token Instagram: [run 38736000422](https://github.com/simoneperaddi-lab/ma-davvero-autopilot/actions/runs/38736000422). Il primo run ha individuato gli href HTML non quotati nel catalogo; il parser è stato corretto e il formato è coperto da una regressione.
 
 ## Limiti che richiedono il proprietario
 
-Account professionale, app Meta, permessi e token long-lived non sono stati configurati. Il contratto live di upload/pubblicazione e il rinnovo di un token reale non sono stati eseguiti. La modalità `preflight` verifica identità e NASA, ma non esercita la pubblicazione. Il primo post reale richiede l’opt-in dell’owner descritto in ANDROID.md.
+Account professionale, app Meta, permessi e token long-lived non sono stati configurati durante questa attività. L’integrazione GitHub disponibile non consente di leggere nemmeno l’elenco dei Secrets/Variables (403): i requisiti vanno verificati dall’owner. Il nuovo workflow manuale non è ancora registrato sul branch principale (dispatch 404 prima del merge); il CLI simulato e i job CI su questo branch sono stati eseguiti. Il contratto live di upload/pubblicazione e il rinnovo di un token reale non sono stati eseguiti. La modalità `preflight` verifica identità e NASA, ma non esercita la pubblicazione. Il primo post reale richiede l’opt-in dell’owner descritto in ANDROID.md.
 
 Verifica scientifica limitata ai dati NASA selezionati; non una revisione indipendente del full text. Quote, disponibilità, ritardi cron e scadenze delle credenziali sono limiti reali. Nessun monitor esterno del cron. Una pubblicazione definitivamente ambigua richiede riconciliazione umana per non rischiare duplicati.
 

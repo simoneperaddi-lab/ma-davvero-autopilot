@@ -6,9 +6,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from autopilot.http import HTTP, RemoteError
+from autopilot.http import Blocked, HTTP, RemoteError
 from autopilot.instagram import Instagram
-from autopilot.pipeline import Pipeline, event, weekly_report
+from autopilot.pipeline import PendingPublication, Pipeline, event, weekly_report
 from autopilot.render import render
 from autopilot.science import Archive, Unverified
 from autopilot.simulation import SimulatedArchive, SimulatedInstagram
@@ -18,15 +18,15 @@ from autopilot.state import GitHubState, LocalState, SecretStore
 def required(name):
     value = os.environ.get(name, "")
     if not value:
-        raise ValueError(f"Configurazione mancante: {name}")
+        raise Blocked(f"Configurazione mancante: {name}")
     return value
 
 
 def live_settings():
     if required("MAD_PUBLISH_ENABLED") != "true":
-        raise ValueError("Pubblicazione disattivata")
+        raise Blocked("Pubblicazione disattivata")
     if required("GITHUB_REF") != "refs/heads/main":
-        raise ValueError("Pubblicazione consentita soltanto da main")
+        raise Blocked("Pubblicazione consentita soltanto da main")
     return required("IG_USER_ID"), required("IG_ACCESS_TOKEN"), required("GH_SECRET_UPDATER")
 
 
@@ -47,7 +47,7 @@ def main(argv=None):
             # Execute a second complete run to assert durable duplicate prevention.
             second = Pipeline(store, SimulatedArchive(), ig, renderer).run(args.output)
             if second != "already_published_today" or ig.publishes > 1:
-                raise ValueError("Test di idempotenza fallito")
+                raise Blocked("Test di idempotenza fallito")
             report = "SIMULAZIONE: nessuna rete e nessuna pubblicazione reale.\n\n" + weekly_report(store.load())
         elif args.mode in {"verify", "preflight"}:
             http = HTTP()
@@ -62,7 +62,7 @@ def main(argv=None):
             live = live_settings() if args.mode == "publish" else None
             repo = required("GITHUB_REPOSITORY")
             if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
-                raise ValueError("Repository non valido")
+                raise Blocked("Repository non valido")
             http = HTTP()
             store = GitHubState(http, repo, required("GITHUB_TOKEN"))
             if args.mode == "publish":
@@ -86,7 +86,7 @@ def main(argv=None):
         message = f"Operazione interrotta ({type(exc).__name__}). Consultare docs/ANDROID.md e il registro; nessun retry di pubblicazione."
         if isinstance(exc, RemoteError):
             message += f" HTTP: {exc.status or 'connessione'}."
-        if isinstance(exc, Unverified):
+        if isinstance(exc, (Unverified, Blocked, PendingPublication)):
             message += " " + str(exc)  # Only locally defined rejection reasons, never response bodies.
         if store is not None:
             try:

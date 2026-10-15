@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
+from autopilot.http import Blocked
 from autopilot.science import Unverified
 
 ROME = ZoneInfo("Europe/Rome")
@@ -35,7 +36,7 @@ class Pipeline:
             self.store.save(state)
         elif self.now - datetime.fromisoformat(token["last_refresh"]) >= timedelta(days=7):
             if self.secrets is None:
-                raise ValueError("Secret store per il rinnovo automatico assente")
+                raise Blocked("Secret store per il rinnovo automatico assente")
             result = self.ig.refresh()
             # Persist the rotated value ONLY to GitHub Secrets before recording success.
             self.secrets.save_token(result["access_token"])
@@ -59,7 +60,7 @@ class Pipeline:
     def run(self, directory):
         state = self.store.load()
         if state.get("account_id") not in (None, self.ig.user_id):
-            raise ValueError("Registro associato a un altro account: operazione bloccata")
+            raise Blocked("Registro associato a un altro account: operazione bloccata")
         state["account_id"] = self.ig.user_id
         self.tokens(state)
         pending = [x for x in state["entries"] if x["status"] not in TERMINAL]
@@ -85,8 +86,8 @@ class Pipeline:
         else:
             try:
                 fact = self.archive.select({x["fact"]["subject"] for x in state["entries"]})
-            except Unverified:
-                event(state, self.now, "skipped", "Nessun dato nuovo sufficientemente verificato")
+            except Unverified as exc:
+                event(state, self.now, "skipped", str(exc))
                 self.store.save(state)
                 return "skipped"
             entry = {"date": day(self.now), "status": "prepared", "fact": fact}

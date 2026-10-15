@@ -40,7 +40,7 @@ Per controllare NASA e generare un Reel reale **senza pubblicare né usare crede
 ## Affidabilità, sicurezza e manutenzione
 
 - Un solo workflow alla volta, senza cancellazione di quello precedente. Stato persistente con controllo SHA: una scrittura concorrente o fallita blocca l'operazione.
-- GET: massimo tre tentativi con ritardo limitato. POST e scritture: nessun replay automatico di richieste dall'esito incerto. Elaborazione video: massimo cinque minuti di polling per ciclo.
+- GET: massimo tre tentativi con ritardo limitato. POST e scritture: nessun replay automatico di richieste dall'esito incerto. Elaborazione video: massimo 20 controlli distanziati di 15 secondi, oltre ai tempi HTTP; timeout del job di 20 minuti.
 - Se la risposta a `media_publish` si perde, il successivo ciclo controlla il container. `PUBLISHED` chiude l'operazione; ogni altro esito resta bloccato, senza rischiare un secondo post. In questo raro caso serve riconciliazione manuale: [procedura](docs/ANDROID.md#se-un-run-fallisce).
 - Errori di fonte/rete/token/permessi fermano il ciclo. Dati insufficienti producono un salto registrato. Nessuna sostituzione con citazioni inventate.
 - Un token scaduto o revocato non si può rinnovare magicamente: il sistema si ferma e segnala errore. Il rinnovo richiede il PAT GitHub limitato ai Secrets; anche quel PAT ha una scadenza da mantenere. Non salvare token nei file, negli artifact o nel ledger.

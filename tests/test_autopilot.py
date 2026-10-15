@@ -354,3 +354,48 @@ def test_failure_to_record_success_reconciles_next_run(tmp_path):
     assert pipeline(tmp_path, ig, store=store).run(tmp_path) == 'published'
     assert ig.publishes == 1
     assert store.load()['entries'][0]['status'] == 'published'
+
+
+def test_end_to_end_http_adapters_with_persistent_github_state(tmp_path):
+    state = empty_state()
+    revision = 1
+    publishes = 0
+    uploads = 0
+    def handler(request):
+        nonlocal state, revision, publishes, uploads
+        if request.url.host == 'exoplanetarchive.ipac.caltech.edu':
+            return httpx.Response(200, json=[ROW])
+        if request.url.host == 'api.github.com':
+            if request.method == 'GET':
+                return httpx.Response(200, json={'sha': str(revision), 'encoding': 'base64',
+                    'content': base64.b64encode(json.dumps(state).encode()).decode()})
+            body = json.loads(request.content)
+            assert body['sha'] == str(revision)
+            state = json.loads(base64.b64decode(body['content']))
+            revision += 1
+            return httpx.Response(200, json={'content': {'sha': str(revision)}})
+        if request.url.host == 'rupload.facebook.com':
+            uploads += 1
+            assert request.content == b'fake-video-for-unit-tests'
+            return httpx.Response(200, json={'success': True})
+        assert request.url.host == 'graph.instagram.com'
+        if request.url.path.endswith('/me'):
+            return httpx.Response(200, json={'user_id': '100', 'username': 'fixture'})
+        if request.url.path.endswith('/100/media'):
+            return httpx.Response(200, json={'id': '200', 'uri': 'https://rupload.facebook.com/ig-api-upload/v24.0/200'})
+        if request.url.path.endswith('/100/media_publish'):
+            assert state['entries'][0]['status'] == 'publishing'
+            publishes += 1
+            return httpx.Response(200, json={'id': '300'})
+        assert request.url.path.endswith('/200')
+        return httpx.Response(200, json={'status_code': 'PUBLISHED' if publishes else 'FINISHED'})
+    transport = http(handler)
+    def run():
+        return Pipeline(GitHubState(transport, 'owner/repo', 'test-workflow-token'), Archive(transport),
+                        Instagram(transport, '100', 'test-instagram-token'), renderer, now=NOW).run(tmp_path)
+    assert run() == 'published'
+    assert run() == 'already_published_today'
+    assert (publishes, uploads) == (1, 1)
+    assert state['entries'][0]['media_id'] == '300'
+    assert 'test-instagram-token' not in json.dumps(state)
+    assert state['entries'][0]['fact']['source_row'] == ROW
