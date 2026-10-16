@@ -36,5 +36,8 @@ jobs:
         if: always()
         with:
           name: authentic-footage-reel
-          path: data/authentic-footage/
+          path: |
+            data/authentic-footage/
+            !data/authentic-footage/sources/*.mp4
+            !data/authentic-footage/work/
           retention-days: 7

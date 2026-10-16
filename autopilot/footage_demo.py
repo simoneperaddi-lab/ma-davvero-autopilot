@@ -180,6 +180,7 @@ def produce(output):
         (work/'final.mp4').replace(output/'reel.mp4')
     finally:
         shutil.rmtree(work,ignore_errors=True)
+        original.unlink(missing_ok=True)  # Do not redistribute the unused source audio.
     evidence={'checked_at':datetime.now(timezone.utc).isoformat(),'original':selected,'proofs':proofs,'claims':[{'quote':q,'url':SCIENCE} for q in QUOTES],
               'edits':{'shot_list':SHOTS,'speed':0.5,'grading':'Gamma 1.6, contrast 1.03, saturation 1.06; no generated features.','temporal_processing':'24 fps, adjacent-frame blend; half-speed playback of the source file; original acquisition cadence is not stated in the catalogue.','audio':'Original source audio discarded; local procedural score only.'},'credit':'NASA / International Space Station; individual camera operator not identified by the catalogue.'}
     (output/'evidence.json').write_text(json.dumps(evidence,indent=2,ensure_ascii=False))
