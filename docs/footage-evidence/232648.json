@@ -1,0 +1,140 @@
+{
+  "id": 232648,
+  "date": "2023-03-17T11:27:36",
+  "date_gmt": "2023-03-17T15:27:36",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4"
+  },
+  "modified": "2023-03-17T11:29:10",
+  "modified_gmt": "2023-03-17T15:29:10",
+  "slug": "iss068-e-66732-67098-20230302-night",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/iss068-e-66732-67098-20230302-night/",
+  "title": {
+    "rendered": "Timelapse of Earth and Auroras at Night"
+  },
+  "author": 64,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-232648",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": 1,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "",
+  "original_date": {
+    "stamp": 0,
+    "display": ""
+  },
+  "description": {
+    "rendered": "<div style=\"width: 1200px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-232648-1\" width=\"1200\" height=\"800\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4\">https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4</a></video></div>\n<p>Timelapse of auroras and solar panels during a night pass taken from the space station.</p>\n"
+  },
+  "caption": {
+    "rendered": "<p>https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4 Timelapse of auroras and solar panels during a night pass taken from the space station.</p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 9890487,
+    "filesize": 18149093,
+    "mime_type": "video/quicktime",
+    "length": 15,
+    "length_formatted": "0:15",
+    "width": 1200,
+    "height": 800,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "created_timestamp": -2082844800,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "",
+    "original_date": {
+      "stamp": 0,
+      "display": ""
+    },
+    "sizes": {}
+  },
+  "post": 128191,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4",
+  "filename": "iss068-e-66732-67098-20230302-night.mp4",
+  "filesize": 18149093,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/232648",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/64"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=232648"
+      }
+    ],
+    "wp:attached-to": [
+      {
+        "embeddable": true,
+        "post_type": "topic",
+        "id": 128191,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/topic/128191"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}

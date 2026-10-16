@@ -1,0 +1,143 @@
+{
+  "id": 730261,
+  "date": "2024-09-11T11:48:36",
+  "date_gmt": "2024-09-11T15:48:36",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4"
+  },
+  "modified": "2024-09-11T11:49:53",
+  "modified_gmt": "2024-09-11T15:49:53",
+  "slug": "e3-pia26404-experiment-recreating-a-carbon-dioxide-plume",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume/",
+  "title": {
+    "rendered": "Experiment Re-Creating a Carbon Dioxide Plume"
+  },
+  "author": 53,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-730261",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": 1,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "NASA/JPL-Caltech",
+  "original_date": {
+    "stamp": 0,
+    "display": ""
+  },
+  "description": {
+    "rendered": "<div style=\"width: 1080px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-730261-1\" width=\"1080\" height=\"1080\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4\">https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4</a></video></div>\n<p>This video shows Martian soil simulant erupting in a plume during a JPL lab experiment that was designed to replicate the process believed to form Martian features called \u201cspiders.\u201d When a researcher who had tried for years to re-create these conditions spotted this plume, she was ecstatic. </p>\n"
+  },
+  "caption": {
+    "rendered": "<p>This video shows Martian soil simulant erupting in a plume during a JPL lab experiment that was designed to replicate the process believed to form Martian features called \u201cspiders.\u201d When a researcher who had tried for years to re-create these conditions spotted this plume, she was ecstatic. </p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 2355598,
+    "filesize": 5608579,
+    "mime_type": "video/mp4",
+    "length": 19,
+    "length_formatted": "0:19",
+    "width": 1080,
+    "height": 1080,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "audio": {
+      "dataformat": "mp4",
+      "bitrate": 2280,
+      "codec": "ISO/IEC 14496-3 AAC",
+      "sample_rate": 48000,
+      "channels": 2,
+      "bits_per_sample": 16,
+      "lossless": false,
+      "channelmode": "stereo",
+      "compression_ratio": 0.001484375
+    },
+    "created_timestamp": -2082844800,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "NASA/JPL-Caltech",
+    "original_date": {
+      "stamp": 0,
+      "display": ""
+    },
+    "sizes": {}
+  },
+  "post": null,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4",
+  "filename": "e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4",
+  "filesize": 5608579,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/730261",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/53"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=730261"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}
