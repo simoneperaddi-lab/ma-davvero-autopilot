@@ -1,97 +1,90 @@
-# Aurora: montaggio editoriale da osservazioni autentiche
+# Aurora — taglio finale, 15 secondi
 
-Esecuzione: `python -m autopilot.aurora_editorial --output data/aurora-editorial`.
-Nessuna chiave, nessun modulo Instagram importato. Il job di verifica in Actions produce
-`aurora-editorial-reel` con MP4, anteprima, caption, fonti, prove e report. Non modifica
-la programmazione o l'abilitazione della pubblicazione.
+`python -m autopilot.aurora_editorial --output data/aurora-editorial`
 
-## Scelte verificabili
+Il comando esistente produce un solo Reel. Nessuna nuova architettura, servizio,
+chiave o API. Nessun cambiamento a Instagram, token, registro o pubblicazione.
 
-20 secondi, 1080×1920, H.264 a 24 fps, AAC stereo. Apertura selezionata fra aurora 4K e campo largo ISS;
-cambio immediato all’altra osservazione; osservazione solare SDO; ritorno alle particelle/luce
-nell'atmosfera; quota dell'emissione verde; chiusura «La Terra risponde».
-Tagli netti motivati dal racconto. Nessuna dissolvenza decorativa, grafica scientifica
-inventata, ripetizione temporale, rallentamento o sfondo duplicato/sfocato.
+## Montaggio
 
-Tre osservazioni distinte, **non tre riprese diverse della stessa aurora**:
-
-| NASA ID | Materiale | Uso e limiti |
+| Nel Reel | Fonte e intervallo originale | Testo |
 |---|---|---|
-| 849432 | Aurora borealis over the US and Canada, 3840×2160 | Ritaglio nativo 1216×2160 ridotto a verticale; gamma 1.35, contrasto 1.03, saturazione 1.02. |
-| 232648 | ISS, 2 marzo 2023, 1200×800 | Campo largo completo, ridotto a 1080×720 dentro il quadro verticale. Nessun ingrandimento artificiale. |
-| 819232 | NASA SDO, maggio 2024, 1024×1024 | Disco solare a risoluzione nativa, etichettato UV/falsi colori. Osservazione strumentale reale, non simulazione né luce visibile. |
+| 0–4 s | NASA 232648, 0–4 s | NON È UN’ANIMAZIONE. |
+| 4–8 s | NASA 849432, 4–8 s | LA TERRA. VISTA DALLA ISS. |
+| 8–11 s | NASA 819232, 12–15 s | IL SOLE ACCENDE IL CIELO. |
+| 11–15 s | NASA 232648, 8–12 s | LA CHIAMIAMO AURORA. |
 
-URL diretti, hash, attribuzioni e schede originali sono in
-`autopilot/aurora_sources.json` e `docs/footage-evidence/`. Il rendering scarica di
-nuovo policy NASA, testi scientifici e schede: modifiche alle descrizioni, ai crediti,
-alle affermazioni verificate o ai file bloccano la produzione per nuova verifica.
-NASA consente l'uso fattuale informativo senza endorsement; non estendiamo questa
-regola a contenuti terzi. Non sono stati individuati crediti terzi nelle tre schede.
-L'audio dei filmati non viene usato né distribuito. Il sottofondo è una composizione
-locale di oscillatori, senza campioni, rilasciata CC0. Non si rilascia sotto CC0 il video NASA.
+Primo fotogramma: aurora verde e rossa, orizzonte terrestre, nessun logo o testo.
+Ogni frase arriva 0,35 s dopo il taglio. Quattro cartigli complessivi, sotto la
+ripresa, senza coprire il fenomeno. Nessuna schermata introduttiva, transizione,
+loop, rallentamento o interpolazione. Il Sole mantiene l'etichetta UV/falsi colori
+sotto il disco. I due estratti della ripresa panoramica non si sovrappongono.
 
-Le tre varianti del post di Matthew Dominick (752962, 752957, 752953) sono escluse:
-contengono interfaccia social, poco dettaglio utile e diritti ulteriori non verificati.
-La vista diurna ISS 364031 è stata ispezionata ma non aggiunge informazione sull'aurora.
-Non è stata presunta alcuna autorizzazione ESA.
+Rispetto alla versione precedente sono stati rimossi selezione euristica
+dell'apertura, testi didattici, logo e scrim sovrapposti. Il piano è fisso e
+revisionato per questa consegna; i controlli esistenti di provenienza, intervalli,
+decodifica e audio rimangono. Non si aggiunge un nuovo template generico.
 
-## Regole riutilizzabili e limiti dell'autonomia
+## Immagine e limiti
 
-`autopilot/editorial.py` è indipendente dall'aurora e dal publisher: richiede almeno
-tre gruppi di osservazione distinti, controlla hash duplicati, intervalli sovrapposti,
-durata e autorizzazioni revisionate. Ritagli e download diversi dello stesso evento
-non aumentano la varietà. Materiale insufficiente fa scartare il progetto, senza
-riempire la durata. La provenienza dei gruppi è curata, non dedotta magicamente dai pixel.
+Output 1080×1920, 24 fps, H.264; AAC stereo. L'immagine ISS occupa 1080×1440,
+seguita dalla fascia riservata al testo. Non è un video a pieno schermo senza bordi.
 
-L'apertura viene scelta fra finestre pertinenti già revisionate, misurando contrasto,
-colore e attività; il piano viene poi nuovamente validato contro le ripetizioni.
-Gli hook dipendono dal tema e vengono da formulazioni revisionate. Un tema senza hook
-supportato viene scartato, non completato con un generatore di affermazioni inventate.
-Queste regole sono usate dal comando di produzione, ma **non sostituiscono il renderer
-quotidiano dell'autopilota**: la pubblicazione e tutte le modalità esistenti restano
-intatte. L'estensione automatica a temi nuovi richiederebbe altri pool verificati.
+- 232648: originale 1200×800; ritaglio destro 600×800 ingrandito 1,8× a 1080×1440.
+  Consente di vedere l'aurora senza il pannello ISS davanti al centro dell'immagine,
+  ma perde dettaglio rispetto a un originale verticale ad alta risoluzione.
+- 849432: originale 3840×2160; ritaglio 1216×1620, ridotto a 1080×1440.
+  Gamma 1,8, contrasto 1,04, saturazione 1,1 per rendere leggibile l'aurora tenue.
+  Non sono sintetizzati nuovi dettagli. Rimane rumore nella ripresa notturna.
+- 819232: disco SDO 1024×1024 ingrandito a 1080×1080, senza tagliarlo.
+  Osservazione reale in ultravioletto a 131 Å, in falsi colori; non è una simulazione.
 
-## Verifica e limiti editoriali
+La composizione del campo largo viene ritagliata: non si pretende di conservare
+l'intero originale. Il Sole mostrato **non è identificato come la causa dello
+specifico evento aurorale**: sono osservazioni di date diverse. «Il Sole accende
+il cielo» sintetizza il ruolo del vento solare nell'interazione con la magnetosfera
+e nell'emissione di luce dell'alta atmosfera. La spiegazione e le fonti complete
+sono nella caption. Le luci puntiformi al suolo sono città.
 
-Il report misura decodifica completa, durata, risoluzione, codec, audio presente/non
-silenzioso/non saturato, fotogrammi neri e intervalli statici campionati a 4 fps.
-I limiti del testo sono verificati prima del rendering: x 80–920, y 170–1570;
-le interfacce Instagram possono comunque variare. Il layout non ingrandisce le fonti.
-Il controllo di movimento non certifica ritmo, bellezza o interesse. Non assegniamo
-un voto estetico automatico e non dichiariamo raggiunto 8/10.
+L'audio è un nuovo breve brano originale sintetizzato localmente: accordi morbidi,
+note pizzicate, accenti sui tagli a 0/4/8/11 s, coda e dissolvenza finale.
+Normalizzazione a obiettivo −18 LUFS e limite true peak −1,5 dBTP, AAC a 48 kHz. Nessun
+campione, registrazione esterna, voce o audio dei file NASA. Brano CC0 1.0; questo
+non modifica i diritti dei filmati NASA.
 
-Le fonti sono osservazioni diverse: **il brillamento SDO non è identificato come causa
-delle aurore mostrate**. «Sembra bruciare» e «La Terra risponde» sono immagini narrative;
-il testo chiarisce subito che non è fuoco. Il verde a 100–250 km è una proprietà
-generale documentata dell'emissione dell'ossigeno, non una misura tratta da questi frame.
-Le luci puntiformi al suolo sono città. I file mantengono la propria velocità: il
-campo largo è un time-lapse; la cadenza originale della ripresa 4K non è dichiarata.
+## Provenienza e diritti
 
-Il campo largo e il Sole non riempiono l'intera altezza: compromesso esplicito per
-non tagliare l'orizzonte o degradare il dettaglio. Nessuna voce narrante; il racconto
-è affidato a testi brevi e musica originale essenziale. Serve la valutazione editoriale
-del MP4 per giudicare se il risultato è pubblicabile.
+URL diretti, hash SHA-256, attribuzioni e schede: `autopilot/aurora_sources.json` e
+`docs/footage-evidence/{232648,849432,819232}.json`. Le condizioni NASA per uso
+fattuale informativo senza endorsement sono verificate durante ogni rendering:
+https://www.nasa.gov/nasa-brand-center/images-and-media/
 
-## Costi
+Non sono identificati crediti o avvisi di copyright di terzi nelle tre schede
+revisionate. Non si assume che tutti i contenuti NASA o ESA siano riutilizzabili.
+Le descrizioni e i crediti devono coincidere con le prove revisionate; modifiche
+ai file, ai metadati o alle affermazioni richieste bloccano la produzione.
 
-Nessuna API a pagamento, abbonamento o hosting. Fonti pubbliche senza chiavi e
-FFmpeg sui runner Ubuntu standard. Per repository pubblici i runner standard GitHub
-sono gratuiti secondo le condizioni correnti; per repository privati valgono i minuti
-e lo storage inclusi nel piano, con possibili costi se superati. Artifact conservato
-7 giorni. Non viene attivato alcun acquisto o runner premium. Il job ha timeout di
-10 minuti; il report registra il tempo effettivo, non promette risorse illimitate.
+Fonti scientifiche:
+- https://www.nasa.gov/image-article/space-between-aurora-australis/
+- https://www.nasa.gov/image-article/red-green-aurora-australis/
 
-## Risultato controllato prima della PR
+## Verifica e consegna
 
-Rendering locale completo: 20 s, 1080×1920, H.264/24 fps e AAC stereo. Decodifica
-integrale senza errori; 80 frame campionati, nessun intervallo statico rilevato alla
-soglia usata, picco audio 0.162 e RMS 0.0346. I sette fotogrammi estratti sono stati
-ispezionati: testi leggibili e nei margini; apertura ampia verde/rossa; contrasto netto
-con disco solare; aurora ravvicinata più tenue e presenza visibile di luci cittadine.
-Restano spazio vuoto nei campi non verticali, una sequenza ravvicinata di 6 secondi e
-musica sintetica essenziale. Nessuna certificazione del voto editoriale richiesto.
+Il job esistente genera l'artifact `aurora-final-reel` (conservato 7 giorni):
+`reel.mp4`, primo fotogramma, anteprima di quattro frame, caption, sottotitoli,
+fonti e report tecnico. Nessun originale con audio non usato viene redistribuito.
 
-Suite locale: 126 test superati, un warning di deprecazione esterno Starlette/AnyIO.
-Actionlint e controllo whitespace superati. Un test preesistente del rate limit
-poteva attraversare il confine del minuto: ora i due test relativi fissano l'orologio
-locale del componente, senza modificare il comportamento della sicurezza in produzione.
+Controlli: decodifica completa, formato/durata, 4 campioni visivi al secondo,
+intervalli statici, frame neri, audio non silenzioso/non saturato, testo separato
+dalla ripresa, nessun riuso di intervalli. Questi controlli non certificano bellezza,
+interesse o un voto creativo. La nitidezza è limitata dalla fonte panoramica e
+l'aurora ravvicinata è più tenue di quella sull'orizzonte: non si nascondono tali
+limiti dietro al successo dei test.
+
+Nessun costo aggiuntivo attivato: fonti senza chiave e strumenti locali open source;
+runner GitHub standard nel repository pubblico, nessun runner premium. Nessun
+servizio di pubblicazione viene eseguito dal job.
+
+Verifica locale: 126 test superati (un warning esterno Starlette/AnyIO); ispezionati
+il primo fotogramma senza logo/testo e i quattro frame del montaggio. La fascia
+riservata ai cartigli è intenzionale, non un riempimento con immagini duplicate.

@@ -13,12 +13,11 @@ def sources():
 
 def test_actual_story_has_three_observations_without_replayed_intervals():
     result=validate_plan(cut.SHOTS,sources())
-    assert result['duration']==20
+    assert result['duration']==15
+    assert len(cut.SHOTS)==4
     assert result['distinct_capture_groups']==3
     assert not result['creative_quality_certified']
-    for source,start in [(849432,8),(849432,10),(232648,3),(232648,4)]:
-        shots=cut.plan_with_opening(dict(source=source,start=start))
-        validate_plan(shots,sources())
+
 
 
 @pytest.mark.parametrize('change,match',[
@@ -27,8 +26,8 @@ def test_actual_story_has_three_observations_without_replayed_intervals():
 def test_rejects_invalid_or_insufficient_material(change,match):
     shots=copy.deepcopy(cut.SHOTS);pool=sources()
     if change=='repeat':shots[-1]['start']=1
-    if change=='alias':pool[1]['group']=pool[2]['group'];shots[2]['start']=11
-    if change=='hash':pool[1]['sha256']=pool[2]['sha256'];shots[2]['start']=11
+    if change=='alias':pool[1]['group']=pool[2]['group']
+    if change=='hash':pool[1]['sha256']=pool[2]['sha256']
     if change=='rights':pool[0]['reviewed']=False
     if change=='range':shots[0]['start']=100
     if change=='nan':shots[0]['start']=float('nan')
@@ -47,11 +46,12 @@ def test_opening_excludes_unrelated_spectacular_material():
 
 def test_safe_text_without_hiding_picture(tmp_path):
     pool={s['id']:s for s in sources()}
-    all_shots=cut.SHOTS+cut.plan_with_opening(dict(source=232648,start=3))
-    for i,shot in enumerate(all_shots):
+    for i,shot in enumerate(cut.SHOTS):
         path=tmp_path/f'{i}.png';boxes=cut.overlay(path,shot,pool[shot['source']])
-        assert all(80<=b[0]<b[2]<=920 and 170<=b[1]<b[3]<=1570 for b in boxes)
-        assert Image.open(path).getpixel((540,960))[3]==0
+        assert all(80<=b[0]<b[2]<=920 and 1290<=b[1]<b[3]<=1610 for b in boxes)
+        image=Image.open(path)
+        assert image.crop((0,0,1080,1290)).getchannel('A').getbbox() is None
+        assert all(b[1]>1440 for b in boxes[:2])
     with pytest.raises(ValueError,match='safe area'):
         cut.overlay(tmp_path/'bad.png',dict(cut.SHOTS[0],text=['W'*100]),pool[849432])
 
