@@ -13,13 +13,13 @@ jobs:
           python-version: '3.12'
           cache: pip
       - name: Install media tools
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core espeak-ng
       - run: python -m pip install -r requirements.txt -c requirements.lock
       - run: python -m pytest -q
   source-contract:
     # Public read-only contract probe. No Meta credentials or publishing permissions.
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
@@ -28,13 +28,17 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg fonts-dejavu-core espeak-ng
       - run: python -m pip install -r requirements.txt -c requirements.lock
-      - name: Real NASA catalogue and original video (never publishes)
-        run: python -m autopilot --mode verify --output data/source-contract
+      - name: Three verified NASA films (no publishing credentials)
+        run: python -m autopilot.showcase --output data/cinema-showcase
+      - name: Offline Italian voice evaluation (not mixed into films)
+        run: |
+          espeak-ng -v it -s 150 -w data/cinema-showcase/tts-evaluation.wav "Sul Sole piove plasma. Quando si raffredda, la gravità lo fa ricadere."
+          cp /usr/share/doc/espeak-ng/copyright data/cinema-showcase/tts-engine-copyright.txt
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: nasa-source-contract
-          path: data/source-contract/
-          retention-days: 1
+          name: cinematic-science-reels
+          path: data/cinema-showcase/
+          retention-days: 7

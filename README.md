@@ -1,20 +1,20 @@
 # MA DAVVERO? — autopilota Instagram gratuito
 
-Un processo GitHub Actions prepara ogni giorno un Reel originale in italiano da una misura del **NASA Exoplanet Archive**, lo carica direttamente tramite le **API ufficiali Instagram con Instagram Login** e conserva fonti e stato per evitare ripetizioni. **La pubblicazione è disattivata finché il proprietario non la abilita esplicitamente.** Non servono OpenAI, Supabase, hosting, immagini acquistate o musica commerciale.
+Un processo GitHub Actions prepara ogni giorno un Reel originale in italiano da un **catalogo documentario con fonti e materiali NASA tracciati**, lo carica direttamente tramite le **API ufficiali Instagram con Instagram Login** e conserva fonti e stato per evitare ripetizioni. **La pubblicazione è disattivata finché il proprietario non la abilita esplicitamente.** Non servono OpenAI, Supabase, hosting, immagini acquistate o musica commerciale.
 
 **Parti da [Android: configurazione e attivazione](docs/ANDROID.md).** La PR unica integra MVP, fase 2 e issue #4. Dashboard mobile, caroselli, workflow editoriale e protezioni precedenti restano disponibili come [studio facoltativo](docs/STUDIO.md); non devono rimanere accesi per il ciclo automatico.
 
 ## Cosa fa
 
-1. Consulta la tabella scientifica `ps` di NASA, cercando esopianeti confermati con un anno inferiore a un giorno terrestre.
-2. Esclude record controversi, limiti superiori/inferiori, misure senza incertezze o riferimento bibliografico e soggetti già utilizzati. Richiede errori relativi inferiori al 10% e l'intero intervallo selezionato sotto un giorno.
-3. Recupera nuovamente il record per nome e confronta i valori. Salva riga originale, URL della query riproducibile, riferimento fornito dal catalogo, data e SHA-256. Nessun DOI inventato, nessun fallback a una risposta LLM.
-4. Deriva matematicamente le ore da giorni × 24; produce cinque scene, didascalia e fonti. Testi e grafiche originali; nessuna riproduzione di articoli, fotografie o loghi NASA.
-5. Renderizza con Pillow/FFmpeg: MP4 verticale 1080×1920, H.264, 24 fps, 20 secondi, zoom e dissolvenze, testi impressi, SRT separato, musica sintetizzata localmente AAC 48 kHz. L'audio si può togliere con `--no-audio`. Non c'è una voce narrante. Il video per Instagram non dipende da tracce sottotitoli che la piattaforma potrebbe eliminare.
+1. Seleziona una storia non utilizzata: pioggia solare, anelli di Saturno o Luna rossa.
+2. Recupera le fonti istituzionali e conferma passaggi scientifici, crediti e condizioni d'uso. Se qualcosa cambia o non è disponibile, salta la storia.
+3. Verifica l'hash e la risoluzione del materiale selezionato; conserva provenienza e copie testuali delle fonti. Nessuna citazione generata da LLM.
+4. Monta immagini autentiche e illustrazioni animate originali, sempre distinte a schermo, con dettagli ravvicinati, movimenti e dissolvenze.
+5. Esporta 1080×1920 nativo, H.264, 24 fps, 24 secondi, AAC stereo, musica originale e SRT. Controlla decodifica, movimento, audio e testi. Nessuna voce narrante nel mix.
 6. Registra l'intenzione **prima** di `media_publish`; carica il file direttamente su `rupload.facebook.com`, attende l'elaborazione e pubblica al massimo una volta per giorno italiano. Nessun sito pubblico per ospitare MP4.
 7. Rinnova il token ogni sette giorni nel secret store GitHub. Conserva il registro nel branch `autopilot-state`; produce un riepilogo settimanale in Actions, domenica alle 18:43 UTC.
 
-**Limite scientifico deliberato:** verifica di una misura rispetto a un catalogo scientifico autorevole, non replica dello studio né fact-checking universale. Il secondo recupero controlla coerenza, non costituisce una seconda fonte indipendente. Non vengono letti o dichiarati verificati i full text degli studi collegati. Il tema è inizialmente solo astronomico e il formato ripetibile; il sistema non inventa una nuova scoperta quotidiana. Esauriti i soggetti idonei, salta i post fino a nuovi dati. Non garantisce copertura di biologia, salute o notizie scientifiche.
+**Limite scientifico deliberato:** tre storie selezionate editorialmente, non un fact-checker universale. Dopo averle utilizzate, il sistema salta i post: non inventa nuovi temi né ripete quelli pubblicati. Il precedente accesso al NASA Exoplanet Archive rimane disponibile per compatibilità. [Materiali, controlli, costi e limiti visivi](docs/cinematic-reels.md).
 
 ## Prova completa, senza account o rete
 
@@ -33,9 +33,13 @@ Per controllare NASA e generare un Reel reale **senza pubblicare né usare crede
 
 ```bash
 .venv/bin/python -m autopilot --mode verify --output data/verifica-nasa
+# Tutti e tre i film e una pagina locale di visione:
+.venv/bin/python -m autopilot.showcase --output data/cinema-showcase
 ```
 
 `preflight` aggiunge la verifica dell'identità Instagram, ma non crea container, non carica e non pubblica. `publish` richiede sia l'opzione esplicita sia `MAD_PUBLISH_ENABLED=true`, ref `refs/heads/main`, segreti e ID dell'account. Non legge credenziali da `.env`. Il workflow espone i segreti soltanto ai passaggi che ne hanno bisogno; non esegue il publisher su pull request.
+
+Il nuovo renderer produce anche `contact-sheet.jpg` e otto frame estratti dal MP4, per verificare il risultato effettivamente codificato. [Montaggio documentario e verifica visiva](docs/cinematic-reels.md).
 
 ## Affidabilità, sicurezza e manutenzione
 
@@ -63,7 +67,8 @@ Il rendering richiede decine di secondi più installazione/coda; stimare 2–5 m
 | `autopilot/pipeline.py` | Stato durevole, deduplicazione, rinnovo e riepiloghi |
 | `autopilot/instagram.py` | API ufficiale, upload diretto, polling e pubblicazione |
 | `autopilot/state.py` | Registro GitHub e aggiornamento cifrato dei Secrets |
-| `autopilot/render.py` | Riutilizzo del renderer originale del content studio |
+| `autopilot/cinema.py`, `cinema_render.py`, `documentaries.py` | Montaggio documentario, musica originale, fonti, diritti e controlli |
+| `autopilot/render.py`, `orbital.py`, `soundtrack.py` | Dispatch e compatibilità con fatti esopianetari/fixture precedenti |
 | `.github/workflows/autopilot.yml` | Cron e comandi manuali con opt-in esplicito |
 | `tests/test_autopilot.py` | Contratti HTTP simulati, fault injection e E2E con FFmpeg reale |
 | `.github/workflows/tests.yml` | Regressioni offline e verifica pubblica separata NASA |

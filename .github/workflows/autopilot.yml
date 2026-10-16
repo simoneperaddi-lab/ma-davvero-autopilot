@@ -76,5 +76,9 @@ jobs:
             data/autopilot/audio-license.txt
             data/autopilot/evidence.json
             data/autopilot/render.json
+            data/autopilot/contact-sheet.jpg
+            data/autopilot/frames/*.jpg
             data/autopilot/report.md
+            data/autopilot/technical-report.json
+            data/autopilot/sources/*.txt
           retention-days: 1

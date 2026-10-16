@@ -10,7 +10,8 @@ from autopilot.http import Blocked, HTTP, RemoteError
 from autopilot.instagram import Instagram
 from autopilot.pipeline import PendingPublication, Pipeline, event, weekly_report
 from autopilot.render import render
-from autopilot.science import Archive, Unverified
+from autopilot.science import Unverified
+from autopilot.documentaries import DocumentaryArchive as Archive
 from autopilot.simulation import SimulatedArchive, SimulatedInstagram
 from autopilot.state import GitHubState, LocalState, SecretStore
 
