@@ -40,7 +40,5 @@ jobs:
         if: always()
         with:
           name: cinematic-science-reels
-          path: |
-            data/cinema-showcase/
-            docs/cinematic-reels.md
+          path: data/cinema-showcase/
           retention-days: 7
