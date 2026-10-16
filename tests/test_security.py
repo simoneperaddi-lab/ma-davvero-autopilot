@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import SecretStr
@@ -44,7 +46,8 @@ def test_local_mode_cannot_be_spoofed_by_forwarded_header(settings):
         assert client.get("/", headers={"X-Forwarded-For": "127.0.0.1"}).status_code == 403
 
 
-def test_rate_limits_survive_restart(settings):
+def test_rate_limits_survive_restart(settings, monkeypatch):
+    monkeypatch.setattr("app.controls.time", SimpleNamespace(time=lambda: 1200))
     settings.mad_generate_per_minute = 1
     for expected in (201, 429):
         with TestClient(create_app(settings), client=("127.0.0.1", 1234)) as client:
@@ -70,7 +73,9 @@ def test_large_body_and_malformed_credentials(settings):
         assert response.status_code == 413
 
 
-def test_login_bruteforce_is_limited(settings):
+def test_login_bruteforce_is_limited(settings, monkeypatch):
+    # Keep requests in one rate window even when CI crosses a minute boundary.
+    monkeypatch.setattr("app.controls.time", SimpleNamespace(time=lambda: 1200))
     with TestClient(secured(settings)) as client:
         for _ in range(20):
             assert client.get("/", auth=("editor", "wrong")).status_code == 401

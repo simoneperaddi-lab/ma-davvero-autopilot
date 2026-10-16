@@ -1,0 +1,132 @@
+{
+  "id": 819232,
+  "date": "2025-02-06T16:48:45",
+  "date_gmt": "2025-02-06T21:48:45",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4"
+  },
+  "modified": "2025-02-06T16:49:50",
+  "modified_gmt": "2025-02-06T21:49:50",
+  "slug": "20240506110746-1024-aia-0131",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/20240506110746-1024-aia-0131/",
+  "title": {
+    "rendered": "May 2-10, 2024 : A Busy Week of Flares"
+  },
+  "author": 145,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-819232",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": null,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "NASA",
+  "original_date": {
+    "stamp": 0,
+    "display": ""
+  },
+  "description": {
+    "rendered": "<div style=\"width: 1024px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-819232-1\" width=\"1024\" height=\"1024\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4\">https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4</a></video></div>\n"
+  },
+  "caption": {
+    "rendered": "<p>The Sun emitted three strong solar flares. The first flare peaked at 2:01 A.M. ET on May 5, 2024, and the second peaked at 7:54 A.M. ET on May 5, 2024. The third peaked at 2:35 A.M. ET on May 6, 2024. NASA’s Solar Dynamics Observatory, which watches the Sun constantly, captured an image of the event. The imagery shows 131 Angstrom light, a subset of extreme ultraviolet light. The sequence culminates wth an X4.5 flare.</p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 9378624,
+    "filesize": 20750255,
+    "mime_type": "video/quicktime",
+    "length": 18,
+    "length_formatted": "0:18",
+    "width": 1024,
+    "height": 1024,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "created_timestamp": -2082844800,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "NASA",
+    "original_date": {
+      "stamp": 0,
+      "display": ""
+    },
+    "sizes": {}
+  },
+  "post": null,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4",
+  "filename": "20240506110746-1024-aia-0131.mp4",
+  "filesize": 20750255,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/819232",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/145"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=819232"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}

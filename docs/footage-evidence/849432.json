@@ -1,0 +1,143 @@
+{
+  "id": 849432,
+  "date": "2025-04-15T09:29:02",
+  "date_gmt": "2025-04-15T13:29:02",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4"
+  },
+  "modified": "2025-04-15T09:31:24",
+  "modified_gmt": "2025-04-15T13:31:24",
+  "slug": "iss072e503021-aurora-borealis-4k",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/iss072e503021-aurora-borealis-4k/",
+  "title": {
+    "rendered": "Aurora borealis over the US and Canada"
+  },
+  "author": 717,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-849432",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": 1,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "",
+  "original_date": {
+    "stamp": 0,
+    "display": ""
+  },
+  "description": {
+    "rendered": "<div style=\"width: 3840px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-849432-1\" width=\"3840\" height=\"2160\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4\">https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4</a></video></div>\n<p>Brilliant green auroras glow and swirl above clusters of the white lights of cities on Earth as viewed from space at night. Part of the view is blocked by a circular piece of equipment and part of a capsule docked to the International Space Station.</p>\n"
+  },
+  "caption": {
+    "rendered": "<p>https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4 Brilliant green auroras glow and swirl above clusters of the white lights of cities on Earth as viewed from space at night. Part of the view is blocked by a circular piece of equipment and part of a capsule docked to the International Space Station.</p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 14783094,
+    "filesize": 23657807,
+    "mime_type": "video/mp4",
+    "length": 13,
+    "length_formatted": "0:13",
+    "width": 3840,
+    "height": 2160,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "audio": {
+      "dataformat": "mp4",
+      "bitrate": 316939,
+      "codec": "ISO/IEC 14496-3 AAC",
+      "sample_rate": 48000,
+      "channels": 2,
+      "bits_per_sample": 16,
+      "lossless": false,
+      "channelmode": "stereo",
+      "compression_ratio": 0.20634049479166666
+    },
+    "created_timestamp": 1744661582,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "",
+    "original_date": {
+      "stamp": 0,
+      "display": ""
+    },
+    "sizes": {}
+  },
+  "post": null,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4",
+  "filename": "iss072e503021-aurora-borealis-4k.mp4",
+  "filesize": 23657807,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/849432",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/717"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=849432"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}

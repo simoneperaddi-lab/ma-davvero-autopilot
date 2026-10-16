@@ -1,0 +1,143 @@
+{
+  "id": 980951,
+  "date": "2026-04-04T04:09:10",
+  "date_gmt": "2026-04-04T08:09:10",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4"
+  },
+  "modified": "2026-04-04T04:33:07",
+  "modified_gmt": "2026-04-04T08:33:07",
+  "slug": "art002m1200912222b-saj-jettison-2-3",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/art002m1200912222b-saj-jettison-2-3/",
+  "title": {
+    "rendered": "Orion Camera View of Spacecraft Adapter Jettison Panel Separation"
+  },
+  "author": 286,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-980951",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": 1,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "NASA",
+  "original_date": {
+    "stamp": 1459468800,
+    "display": "April 1st, 2016"
+  },
+  "description": {
+    "rendered": "<div style=\"width: 3840px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-980951-1\" width=\"3840\" height=\"2160\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4\">https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4</a></video></div>\n<p>A rectangular piece of hardware falls away from the camera revealing a portion of the Orion spacecraft with the sun shining in the distance and a blue and white sliver of the Earth visible below.</p>\n"
+  },
+  "caption": {
+    "rendered": "<p>art002m1200912222b-saj-jettison-2 &#8211; A view of one of the spacecraft adapter jettison panels falling away from the Orion spacecraft\u2019s service module, just minutes after the 6:35 p.m. EDT liftoff of the Artemis II mission from NASA\u2019s Kennedy Space Center in Florida. The panels protect the spacecraft&#8217;s solar array wings from the dynamic environment of ascent as the SLS (Space Launch System) rocket propels Orion into space. They are then jettisoned to allow the solar arrays to unfurl.</p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 23261562,
+    "filesize": 88591859,
+    "mime_type": "video/mp4",
+    "length": 30,
+    "length_formatted": "0:30",
+    "width": 3840,
+    "height": 2160,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "audio": {
+      "dataformat": "mp4",
+      "bitrate": 317194,
+      "codec": "ISO/IEC 14496-3 AAC",
+      "sample_rate": 48000,
+      "channels": 2,
+      "bits_per_sample": 16,
+      "lossless": false,
+      "channelmode": "stereo",
+      "compression_ratio": 0.20650651041666668
+    },
+    "created_timestamp": 1775197997,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "NASA",
+    "original_date": {
+      "stamp": 1459468800,
+      "display": "April 1st, 2016"
+    },
+    "sizes": {}
+  },
+  "post": null,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4",
+  "filename": "art002m1200912222b-saj-jettison-2-2.mp4",
+  "filesize": 88591859,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/980951",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/286"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=980951"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+[
+  {
+    "id": 849432,
+    "title": "Aurora borealis over the US and Canada",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/849432",
+    "url": "https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4",
+    "sha256": "8a0b743b7c7b6d45d8b6ab9e74cd6a67e0da5fbdb87d1f4393c8a462d3b4b9e9",
+    "dimensions": [
+      3840,
+      2160
+    ],
+    "duration": 12.466667,
+    "credit_reported": "",
+    "status": "selected",
+    "reason": "Ripresa ISS 4K; ritaglio verticale senza upscale; movimento reale.",
+    "rights_review": "Uso editoriale informativo secondo condizioni NASA. Nessun credito terzo identificato nei metadati; attribuzione NASA / ISS. Audio originale del file escluso.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "checked_on": "2026-10-16",
+    "type": "Riprese autentiche ISS; cadenza di acquisizione non dichiarata dal catalogo"
+  },
+  {
+    "id": 752957,
+    "title": "matthew-dominick&#8212;x-timelapse-post",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/752957",
+    "url": "https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4",
+    "sha256": "7150a1eff4974f324099be2d3f8b54c245c40dc8c6b0e87f455f056bb2d84b4d",
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "duration": 55.3,
+    "credit_reported": "Matthew Dominick",
+    "status": "rejected",
+    "reason": "Registrazione di un post X, non il filmato pulito; dettaglio utile ridotto.",
+    "rights_review": "Credito Matthew Dominick. Il contenitore include interfaccia e marchi di terzi: non si presume una licenza NASA per tutti gli elementi; escluso.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "checked_on": "2026-10-16",
+    "type": "Ripresa ISS incorporata in schermata social"
+  },
+  {
+    "id": 232648,
+    "title": "Timelapse of Earth and Auroras at Night",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/232648",
+    "url": "https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4",
+    "sha256": "b25ac53d4a922ab40503eff0a694678d1dd0569bb4e96246c4d85b92796a3e75",
+    "dimensions": [
+      1200,
+      800
+    ],
+    "duration": 14.68,
+    "credit_reported": "",
+    "status": "rejected",
+    "reason": "1200×800: il ritaglio verticale richiederebbe un forte ingrandimento.",
+    "rights_review": "Ripresa ISS pubblicata da NASA, senza avviso di copyright di terzi nei metadati; condizioni NASA per uso informativo e attribuzione. Non utilizzata.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "checked_on": "2026-10-16",
+    "type": "Riprese autentiche; ISS in time-lapse"
+  },
+  {
+    "id": 730261,
+    "title": "Experiment Re-Creating a Carbon Dioxide Plume",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/730261",
+    "url": "https://www.nasa.gov/wp-content/uploads/2024/09/e3-pia26404-experiment-recreating-a-carbon-dioxide-plume.mp4",
+    "sha256": "d2013980e62f02ee2708655a57b9f552729c4c8d3e354be39593a2ea762258f1",
+    "dimensions": [
+      1080,
+      1080
+    ],
+    "duration": 18.944,
+    "credit_reported": "NASA/JPL-Caltech",
+    "status": "rejected",
+    "reason": "Esperimento in laboratorio, ripresa quadrata e testo incorporato; impatto visivo inferiore.",
+    "rights_review": "Credito NASA/JPL-Caltech. Condizioni specifiche JPL non confermate: sito JPL non accessibile da questo ambiente. Nessuna autorizzazione presunta; escluso.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "checked_on": "2026-10-16",
+    "type": "Ripresa di esperimento"
+  },
+  {
+    "id": 980951,
+    "title": "Orion Camera View of Spacecraft Adapter Jettison Panel Separation",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/980951",
+    "url": "https://www.nasa.gov/wp-content/uploads/2026/04/art002m1200912222b-saj-jettison-2-2.mp4",
+    "sha256": "173f5e744da954ccee6a9c7a8a1373e4618d0ea419140535ed6c4dfcf313750f",
+    "dimensions": [
+      3840,
+      2160
+    ],
+    "duration": 29.996633,
+    "credit_reported": "NASA",
+    "status": "rejected",
+    "reason": "Ripresa reale 4K, ma con larghe aree sovraesposte e bordi neri.",
+    "rights_review": "Credito NASA esplicito nei metadati. Condizioni NASA per uso fattuale informativo, senza endorsement; non utilizzata.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "checked_on": "2026-10-16",
+    "type": "Ripresa di separazione pannello"
+  }
+]

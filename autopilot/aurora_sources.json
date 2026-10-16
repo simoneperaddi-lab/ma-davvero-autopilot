@@ -1,0 +1,56 @@
+[
+  {
+    "id": 849432,
+    "group": "iss072e503021",
+    "layout": "portrait",
+    "description": "Aurora vicina, città al suolo",
+    "url": "https://www.nasa.gov/wp-content/uploads/2025/04/iss072e503021-aurora-borealis-4k.mp4",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/849432",
+    "sha256": "8a0b743b7c7b6d45d8b6ab9e74cd6a67e0da5fbdb87d1f4393c8a462d3b4b9e9",
+    "dimensions": [
+      3840,
+      2160
+    ],
+    "duration": 12.466667,
+    "credit": "NASA / ISS",
+    "rights_review": "Uso fattuale informativo secondo policy NASA; nessun credito o avviso terzo identificato nella scheda ufficiale. Audio sorgente escluso. Nessun endorsement.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "reviewed": true
+  },
+  {
+    "id": 232648,
+    "group": "iss068-20230302",
+    "layout": "wide",
+    "description": "Orizzonte terrestre, aurora e pannelli ISS",
+    "url": "https://www.nasa.gov/wp-content/uploads/2023/02/iss068-e-66732-67098-20230302-night.mp4",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/232648",
+    "sha256": "b25ac53d4a922ab40503eff0a694678d1dd0569bb4e96246c4d85b92796a3e75",
+    "dimensions": [
+      1200,
+      800
+    ],
+    "duration": 14.68,
+    "credit": "NASA / ISS",
+    "rights_review": "Uso fattuale informativo secondo policy NASA; nessun credito o avviso terzo identificato nella scheda ufficiale. Audio sorgente escluso. Nessun endorsement.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "reviewed": true
+  },
+  {
+    "id": 819232,
+    "group": "sdo-20240502-10",
+    "layout": "square",
+    "description": "Sole in ultravioletto a 131 Å, falsi colori",
+    "url": "https://www.nasa.gov/wp-content/uploads/2025/02/20240506110746-1024-aia-0131.mp4",
+    "metadata_url": "https://www.nasa.gov/wp-json/wp/v2/media/819232",
+    "sha256": "f879fb344c0b88678c27e1b6188cf7fb3b5842d360bb8b6d29106a2bb970ff83",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "duration": 17.7,
+    "credit": "NASA",
+    "rights_review": "Uso fattuale informativo secondo policy NASA; nessun credito o avviso terzo identificato nella scheda ufficiale. Audio sorgente escluso. Nessun endorsement.",
+    "policy_url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "reviewed": true
+  }
+]

@@ -1,0 +1,132 @@
+{
+  "id": 752957,
+  "date": "2024-11-07T15:02:29",
+  "date_gmt": "2024-11-07T20:02:29",
+  "guid": {
+    "rendered": "https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4"
+  },
+  "modified": "2024-11-07T15:05:48",
+  "modified_gmt": "2024-11-07T20:05:48",
+  "slug": "matthew-dominick-x-timelapse-post",
+  "status": "inherit",
+  "type": "attachment",
+  "link": "https://www.nasa.gov/video-detail/matthew-dominick-x-timelapse-post/",
+  "title": {
+    "rendered": "matthew-dominick&#8212;x-timelapse-post"
+  },
+  "author": 382,
+  "featured_media": 0,
+  "comment_status": "closed",
+  "ping_status": "closed",
+  "template": "",
+  "meta": {
+    "nasa_hds_core_meta_l10n": "en-US",
+    "nasa_hds_core_meta_article_editor": "",
+    "nasa_hds_core_meta_article_contacts": [],
+    "nasa_hds_core_meta_article_topic": "",
+    "nasa_hds_core_meta_linked_locations": [],
+    "nasa_hds_core_meta_article_related_articles": [],
+    "hds_migrate_meta_pr_release_id": "",
+    "hds_migrate_meta_pr_release_type": "",
+    "nasa_hds_core_meta_location_x": "",
+    "nasa_hds_core_meta_location_y": "",
+    "nasa_hds_core_meta_gallery_images": [],
+    "nasa_hds_core_meta_video_cc_file_id": "",
+    "nasa_hds_core_meta_audio_cc_file_id": ""
+  },
+  "media-tags": [],
+  "class_list": [
+    "post-752957",
+    "attachment",
+    "type-attachment",
+    "status-inherit",
+    "hentry"
+  ],
+  "read_time": 1,
+  "video_cc_url": "",
+  "audio_cc_url": "",
+  "poster": {
+    "id": 0,
+    "file": false
+  },
+  "credits": "Matthew Dominick",
+  "original_date": {
+    "stamp": 0,
+    "display": ""
+  },
+  "description": {
+    "rendered": "<div style=\"width: 1920px;\" class=\"wp-video\"><video class=\"wp-video-shortcode\" id=\"video-752957-1\" width=\"1920\" height=\"1080\" preload=\"metadata\" controls=\"controls\"><source type=\"video/mp4\" src=\"https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4?_=1\" /><a href=\"https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4\">https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4</a></video></div>\n<p>Matthew Dominick shared this timelapse video to his X account in August 2024, showing the Moon setting into streams of red and green aurora.</p>\n"
+  },
+  "caption": {
+    "rendered": "<p>https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4 Matthew Dominick shared this timelapse video to his X account in August 2024, showing the Moon setting into streams of red and green aurora.</p>\n"
+  },
+  "alt_text": "",
+  "media_type": "file",
+  "mime_type": "video/mp4",
+  "media_details": {
+    "bitrate": 1409728,
+    "filesize": 9744794,
+    "mime_type": "video/quicktime",
+    "length": 55,
+    "length_formatted": "0:55",
+    "width": 1920,
+    "height": 1080,
+    "fileformat": "mp4",
+    "dataformat": "quicktime",
+    "created_timestamp": -2082844800,
+    "cc-file": "",
+    "cc-file-id": "",
+    "credits": "Matthew Dominick",
+    "original_date": {
+      "stamp": 0,
+      "display": ""
+    },
+    "sizes": {}
+  },
+  "post": null,
+  "source_url": "https://www.nasa.gov/wp-content/uploads/2024/11/matthew-dominick-x-timelapse-post.mp4",
+  "filename": "matthew-dominick-x-timelapse-post.mp4",
+  "filesize": 9744794,
+  "_links": {
+    "self": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media/752957",
+        "targetHints": {
+          "allow": [
+            "GET"
+          ]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media"
+      }
+    ],
+    "about": [
+      {
+        "href": "https://www.nasa.gov/wp-json/wp/v2/types/attachment"
+      }
+    ],
+    "author": [
+      {
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/users/382"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "media-tags",
+        "embeddable": true,
+        "href": "https://www.nasa.gov/wp-json/wp/v2/media-tags?post=752957"
+      }
+    ],
+    "curies": [
+      {
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }
+    ]
+  }
+}
