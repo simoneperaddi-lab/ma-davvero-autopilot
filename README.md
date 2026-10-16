@@ -1,5 +1,7 @@
 # MA DAVVERO? — autopilota Instagram gratuito
 
+**Reel dimostrativo da riprese autentiche:** `.venv/bin/python -m autopilot.footage_demo` produce un solo MP4 verticale da un filmato NASA/ISS in 4K, senza chiamare Instagram. [Cinque candidati, fonti, diritti e limiti](docs/authentic-footage.md). L'artifact CI si chiama `authentic-footage-reel`.
+
 Un processo GitHub Actions prepara ogni giorno un Reel originale in italiano da una misura del **NASA Exoplanet Archive**, lo carica direttamente tramite le **API ufficiali Instagram con Instagram Login** e conserva fonti e stato per evitare ripetizioni. **La pubblicazione è disattivata finché il proprietario non la abilita esplicitamente.** Non servono OpenAI, Supabase, hosting, immagini acquistate o musica commerciale.
 
 **Parti da [Android: configurazione e attivazione](docs/ANDROID.md).** La PR unica integra MVP, fase 2 e issue #4. Dashboard mobile, caroselli, workflow editoriale e protezioni precedenti restano disponibili come [studio facoltativo](docs/STUDIO.md); non devono rimanere accesi per il ciclo automatico.
