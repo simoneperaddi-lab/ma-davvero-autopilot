@@ -1,3 +1,5 @@
+Il nuovo montaggio aurora con tre osservazioni reali si genera con `python -m autopilot.aurora_editorial`. [Scelte editoriali, fonti e limiti](docs/aurora-editorial.md). Artifact Actions: `aurora-editorial-reel`. Nessuna pubblicazione attivata.
+
 # MA DAVVERO? — autopilota Instagram gratuito
 
 **Reel dimostrativo da riprese autentiche:** `.venv/bin/python -m autopilot.footage_demo` produce un solo MP4 verticale da un filmato NASA/ISS in 4K, senza chiamare Instagram. [Cinque candidati, fonti, diritti e limiti](docs/authentic-footage.md). L'artifact CI si chiama `authentic-footage-reel`.

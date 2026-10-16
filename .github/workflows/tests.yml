@@ -31,13 +31,13 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg fonts-dejavu-core
       - run: python -m pip install -r requirements.txt -c requirements.lock
       - name: Authentic NASA footage Reel (never publishes)
-        run: python -m autopilot.footage_demo --output data/authentic-footage
+        run: python -m autopilot.aurora_editorial --output data/aurora-editorial
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: authentic-footage-reel
+          name: aurora-editorial-reel
           path: |
-            data/authentic-footage/
-            !data/authentic-footage/sources/*.mp4
-            !data/authentic-footage/work/
+            data/aurora-editorial/
+            !data/aurora-editorial/sources/*.mp4
+            !data/aurora-editorial/work/
           retention-days: 7

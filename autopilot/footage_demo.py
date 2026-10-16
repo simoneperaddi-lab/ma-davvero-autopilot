@@ -89,15 +89,15 @@ def overlay(path, lines, hook=False):
     return boxes
 
 
-def soundtrack(path):
+def soundtrack(path, duration=DURATION):
     """Original local ambient composition, no external samples or source audio."""
     rate=48000;pcm=array('h')
-    for i in range(rate*DURATION):
+    for i in range(rate*duration):
         t=i/rate;root=[110,130.8128,98][min(2,int(t/8))]
         pad=sum(math.sin(2*math.pi*root*r*t)*a for r,a in [(1,.035),(1.5,.025),(2,.018)])
         beat=t%.5;kick=.1*math.sin(2*math.pi*(44*beat+2*(1-math.exp(-beat*25))))*math.exp(-beat*25)
         sparkle=.012*math.sin(2*math.pi*880*t)*math.exp(-(t%4)*3)
-        fade=min(1,t/.1,(DURATION-t)/1.5)
+        fade=min(1,t/.1,(duration-t)/1.5)
         left=(pad+kick+sparkle)*fade
         right=(pad*.97+kick+sparkle*math.sin(t*.5))*fade
         pcm.extend((round(left*32767),round(right*32767)))
@@ -106,12 +106,12 @@ def soundtrack(path):
         out.setnchannels(2);out.setsampwidth(2);out.setframerate(rate);out.writeframes(pcm.tobytes())
 
 
-def check_video(path):
+def check_video(path, duration=DURATION):
     info=probe(path);video=next(s for s in info['streams'] if s['codec_type']=='video')
     audios=[s for s in info['streams'] if s['codec_type']=='audio']
     errors=[]
     if (video['width'],video['height'],video['codec_name'],video['r_frame_rate'])!=(1080,1920,'h264','24/1'):errors.append('video format')
-    if abs(float(info['format']['duration'])-24)>.08:errors.append('duration')
+    if abs(float(info['format']['duration'])-duration)>.08:errors.append('duration')
     run(['ffmpeg','-v','error','-xerror','-i',str(path),'-f','null','-'],120)
     raw=run(['ffmpeg','-v','error','-i',str(path),'-vf','fps=4,scale=108:192','-pix_fmt','rgb24','-f','rawvideo','-']).stdout
     stride=108*192*3;previous=None;static=longest=0;brightness=[];motion=[]
@@ -122,7 +122,7 @@ def check_video(path):
             delta=sum(ImageStat.Stat(ImageChops.difference(frame,previous)).mean)/3;motion.append(delta)
             static=static+1 if delta<.3 else 0;longest=max(longest,static)
         previous=frame
-    if len(brightness)!=96 or min(brightness)<2:errors.append('empty/black/incomplete frames')
+    if len(brightness)!=round(duration*4) or min(brightness)<2:errors.append('empty/black/incomplete frames')
     if longest/4>1.5:errors.append('static picture')
     audio_report={}
     if len(audios)!=1:errors.append('missing audio')
@@ -130,7 +130,7 @@ def check_video(path):
         samples=array('h');samples.frombytes(run(['ffmpeg','-v','error','-i',str(path),'-vn','-f','s16le','-ac','2','-ar','48000','-']).stdout)
         if sys.byteorder!='little':samples.byteswap()
         peak=max(abs(v) for v in samples)/32768;rms=math.sqrt(sum(v*v for v in samples)/len(samples))/32768
-        if peak>=.98 or rms<.005 or abs(len(samples)/96000-24)>.1:errors.append('audio level/duration')
+        if peak>=.98 or rms<.005 or abs(len(samples)/96000-duration)>.1:errors.append('audio level/duration')
         audio_report={'peak':peak,'rms':rms,'codec':audios[0]['codec_name'],'channels':audios[0]['channels']}
     report={'passed':not errors,'errors':errors,'duration':float(info['format']['duration']),'width':video['width'],'height':video['height'],'codec':video['codec_name'],'fps':video['r_frame_rate'],'audio':audio_report,'sampled_frames':len(brightness),'minimum_subject_brightness':min(brightness),'mean_subject_motion':sum(motion)/len(motion),'longest_static_seconds':longest/4,'limitation':'Technical checks sample image at 4 fps and do not certify aesthetics; audio fully decoded.'}
     return report
