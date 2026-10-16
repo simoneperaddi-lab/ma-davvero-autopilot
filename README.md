@@ -1,4 +1,4 @@
-Il nuovo montaggio aurora con tre osservazioni reali si genera con `python -m autopilot.aurora_editorial`. [Scelte editoriali, fonti e limiti](docs/aurora-editorial.md). Artifact Actions: `aurora-editorial-reel`. Nessuna pubblicazione attivata.
+Il taglio finale aurora di 15 secondi con quattro frasi si genera con `python -m autopilot.aurora_editorial`. [Scelte editoriali, fonti e limiti](docs/aurora-editorial.md). Artifact Actions: `aurora-final-reel`. Nessuna pubblicazione attivata.
 
 # MA DAVVERO? — autopilota Instagram gratuito
 

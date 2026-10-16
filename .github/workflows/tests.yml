@@ -35,7 +35,7 @@ jobs:
       - uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: aurora-editorial-reel
+          name: aurora-final-reel
           path: |
             data/aurora-editorial/
             !data/aurora-editorial/sources/*.mp4
